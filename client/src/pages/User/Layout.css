@@ -1,0 +1,9 @@
+.main{
+    display: flex;
+    min-height: 100vh;
+}
+
+.mainContent{
+    flex-grow: 1;
+    background-color: teal;
+}
