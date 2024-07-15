@@ -5,5 +5,12 @@
 
 .mainContent{
     flex-grow: 1;
-    background-color: teal;
+    background-color: var(--sec2);
+    display: flex;
+    flex-direction: column;
+}
+
+.content{
+    padding: 0px 40px;
+    padding-bottom: 40px;
 }
