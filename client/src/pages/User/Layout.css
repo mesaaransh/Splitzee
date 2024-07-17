@@ -1,6 +1,8 @@
 .main{
     display: flex;
     min-height: 100vh;
+
+    transition-duration: 200ms;
 }
 
 .mainContent{

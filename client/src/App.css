@@ -17,14 +17,23 @@
   --blue1: #0086E6;
   --blue2: #625FFF;
   --blue3: #7300e6;
+  --bluea: #c9e9ff;
 
-  --red1: rgb(255, 0, 64);
-  --red2: rgb(255, 0, 123);
-  --red3: rgb(255, 19, 176);
+  --red1: #ff0040;
+  --red2: #ff007b;
+  --red3: #ff13b0;
+  --reda: #ffc4d2;
 
-  --yellow1: rgb(255, 213, 0);
+  --yellow1: #ffd500;
   --yellow2: #faaf00;
   --yellow3: #e5ff00;
+  --yellowa: #fff1ac;
+
+  --green1: #00cb1b;
+  --green2: #00de73;
+  --green3: #3de400;
+  --greena: #afffba;
+
 }
 
 body{

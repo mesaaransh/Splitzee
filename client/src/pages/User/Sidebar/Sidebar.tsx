@@ -1,7 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import "./Sidebar.css"
 import { TbPlus } from "react-icons/tb";
 
-export default function Sidebar() {
+export default function Sidebar(props: any) {
+    let temp = () => {
+        props.setAdd(true)
+        props.setBlur(0);
+    };
     return (
         <div className="sidebar">
 
@@ -12,7 +17,7 @@ export default function Sidebar() {
                 <div className="sidebarProfilePic"></div>
             </div>
 
-            <SidebarCategory name="Trips">
+            <SidebarCategory name="Trips" addfunc={temp}>
                 <CategoryItem name="VaishnoDevi-Trip" date="22nd October 2022" />
                 <CategoryItem name="VaishnoDevi-Trip" date="22nd October 2022" />
                 <CategoryItem name="VaishnoDevi-Trip" date="22nd October 2022" />
@@ -46,7 +51,7 @@ function SidebarCategory(props: any) {
         <div className="sidebarCategory">
             <div className="sidebarCategoryTitle">
                 <h2>{props.name}</h2>
-                <div className="addButton"><TbPlus/></div>
+                <div className="addButton" onClick={() => {props.addfunc()}}><TbPlus/></div>
             </div>
 
             <div className="sidebarCategoryItems">
@@ -59,8 +64,14 @@ function SidebarCategory(props: any) {
 
 function CategoryItem(props: any) {
 
+    const navigator = useNavigate();
+
+    function clickHandler(){
+        navigator('./trip/')
+    }
+
     return(
-        <div className="sidebarCategoryItem">
+        <div className="sidebarCategoryItem" onClick={clickHandler}>
             <div className="sidebarCategoryItemIcon"> </div>
 
             <div>

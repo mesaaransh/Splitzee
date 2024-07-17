@@ -75,6 +75,7 @@
 .sidebarCategoryItem{
     display: flex;
     cursor: pointer;
+    position: relative;
 }
 
 .sidebarCategoryItem:not(:nth-of-type(1)){
@@ -89,7 +90,7 @@
     background-color: rgb(98, 95, 255);
     margin-right: 20px;
     box-shadow: 0px 3px 2px 0px hsla(0, 0%, 64%, 0.3);
-    
+
 }
 
 .sidebarCategoryItem > div{
@@ -105,5 +106,21 @@
 .sidebarCategoryItem > div > h5{
     color: var(--dark1);
     font-weight: 600;
+}
 
+.sidebarCategoryItem:hover::before{
+
+    content: '';
+    position: absolute;
+
+    background-color: var(--blue2);
+    height: 10px;
+    aspect-ratio: 1;
+    border-radius: 50px;
+    left: -25px;
+    top: 50%;
+
+    transform: translateY(-50%);
+    transition-duration: 200ms;
+    
 }
