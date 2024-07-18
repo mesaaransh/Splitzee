@@ -57,25 +57,6 @@ export default function SignupForm() {
             </div>
 
             <div className="formRow">
-                <div className="formControl">
-                    <label htmlFor="">Phone Number</label>
-                    <input type="text" name="phone" onInput={formInputHandler} required/>
-                </div>
-
-                <div className="formControl">
-                    <label htmlFor="">Date of Birth</label>
-                    <input type="date" name="dob" onChange={formInputHandler} required/>
-                </div>
-            </div>
-
-            <div className="formRow">
-                <div className="formControl">
-                    <label htmlFor="">Year</label>
-                    <input type="number" name="year" onInput={formInputHandler} required/>
-                </div>
-            </div>
-
-            <div className="formRow">
                 <div className="formControl">            
                     <label htmlFor="">Email</label>
                     <input type="email" name="email" onInput={formInputHandler} required/>
