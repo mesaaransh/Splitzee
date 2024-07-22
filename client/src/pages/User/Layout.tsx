@@ -1,25 +1,59 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import "./Layout.css"
 import Sidebar from "./Sidebar/Sidebar"
 import Topbar from "./Topbar/Topbar"
-import AddTrip from "./Forms/AddTrip"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import config from "../../config"
 
 export default function Layout() {
-  let [add, setAdd] = useState(false);
+  let [auth, setAuth] = useState(false);
+  let [name, setName] = useState("");
+
+  let navigator = useNavigate();
+
+  useEffect(() => { authenticator() }, [])
+  async function authenticator() {
+
+    let token: any = ""
+    token = sessionStorage.getItem('token');
+
+    axios.post(config.apiURL + 'verify', { token }, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).catch((err) => {
+      console.log(err);
+    }).then((resp: any) => {
+      if (resp && resp.status == 200) {
+        setAuth(true)
+        setName(resp.data.name)
+      }
+      else {
+        setAuth(false);
+        navigator('/login')
+      }
+    })
+  }
 
   return (
     <>
-    <AddTrip display = {add} setDisplay = {setAdd}/>
-    <div className="main" style={{filter: `blur(${blur}px)`}}>
-        <div className="mainContent">
-          <Topbar/>
-          <div className="content">
-            <Outlet/>
-          </div>
-        </div>
-        <Sidebar setAdd={setAdd}/>
-    </div>
+      {
+        auth ?
+          <>
+            <div className="main">
+              <div className="mainContent">
+                <Topbar />
+                <div className="content">
+                  <Outlet />
+                </div>
+              </div>
+              <Sidebar name={name} />
+            </div>
+          </>
+          :
+          <></>
+      }
     </>
   )
 }

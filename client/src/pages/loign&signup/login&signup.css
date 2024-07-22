@@ -127,6 +127,12 @@
 
     border-radius: 5px;
 
+    transition-duration: 200ms;
+
+}
+
+.signupForm > button:disabled{
+    background-color: var(--dark1);
 }
 
 .remember > input{
@@ -175,15 +181,4 @@
     box-shadow: 0 0 50px black;
 
 
-}
-
-.loader{
-    position: absolute;
-    height: 3px;
-    width: 0vw;
-    background-color: var(--primary);
-    top: 0;
-    left: 0;
-
-    transition-duration: 100ms;
 }

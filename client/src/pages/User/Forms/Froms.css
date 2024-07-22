@@ -21,9 +21,23 @@
     padding-bottom: 50px;
 
     z-index: 500;
+
+    animation: appear 100ms forwards;
+    animation-timing-function: ease-in
     
 }
 
+@keyframes appear {
+
+    0%{
+        opacity: 0;
+    }
+
+    100%{
+        opacity: 1;
+    }
+    
+}
 
 .popupblur{
 
@@ -35,8 +49,22 @@
     z-index: 499;
 
     background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(4px);
+    
+    animation: blur 200ms forwards;
 
+
+}
+
+@keyframes blur {
+
+    0%{
+        backdrop-filter: blur(0px);
+    }
+
+    100%{
+        backdrop-filter: blur(4px);
+    }
+    
 }
 
 .popupFrom > .form{

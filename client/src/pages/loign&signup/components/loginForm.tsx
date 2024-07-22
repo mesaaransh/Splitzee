@@ -1,26 +1,41 @@
+import axios from "axios"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import config from "../../../config"
+import waiter from "../../../waiter"
 
 export default function LoginForm() {
 
     let [formData, setFormData] = useState({})
-    let [error, setError] = useState("error")
-    const navigate = useNavigate()
+    let [error, setError] = useState("")
+    const navigator = useNavigate()
 
     function formInputHandler(e: any){
+        setError("")
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         })
-        setError("")
-    }
-
-
-    async function Fetcher(userData: any) {
     }
 
     async function formSubmitHandler(e: any){
         e.preventDefault()
+
+        axios.post(config.apiURL + 'login', formData, {
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).catch((err) => {
+            setError(err.response.data)
+            console.log(err)
+        }).then(async (response: any) => {
+            if(response.status == 200){
+                sessionStorage.setItem('token', response.data)
+                await waiter(1000)
+                navigator('/user/home')
+            }
+        })
+
     }
 
 

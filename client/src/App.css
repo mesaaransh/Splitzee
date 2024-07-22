@@ -29,11 +29,12 @@
   --yellow3: #e5ff00;
   --yellowa: #fff1ac;
 
-  --green1: #00cb1b;
+  --green1: #00b818;
   --green2: #00de73;
   --green3: #3de400;
-  --greena: #afffba;
+  --greena: #c4ffcc;
 
+  --sep: hsl(0, 0%, 85%);
 }
 
 body{
@@ -43,4 +44,26 @@ body{
 button{
   cursor: pointer;
   transition-duration: 200ms;
+}
+
+a{
+  color: var(--blue1);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+
+  transition-duration: 200ms;
+}
+
+a:hover{
+  color: var(--blue3);
+}
+
+.shake:hover{
+  animation: shake 700ms;
+  animation-timing-function: ease-in-out;
+}
+
+.pop:hover{
+  animation: bookmark 500ms;
+  animation-timing-function: ease-in;
 }

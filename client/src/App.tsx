@@ -12,12 +12,14 @@ function App() {
       <Routes>
         <Route path='/login' element={<LoginSignup page="Login"/>} />
         <Route path='/signup' element={<LoginSignup page="Sign Up"/>} />
+
         <Route path='/user' element={<Layout/>}>
           <Route index element={<Home/>}/>
           <Route path="home" element={<Home/>}/>
           <Route path="friends" element={<Friends/>}/>
-          <Route path="trip" element={<Trip/>}/>
+          <Route path="trip/:id" element={<Trip/>}/>
         </Route>
+
       </Routes>
     </BrowserRouter>
   )

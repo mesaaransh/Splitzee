@@ -14,8 +14,8 @@ export default function Trip() {
     return (
         <>
         <AddExpense display = {addExpense} setDisplay={setAddExpense}/>
+
         <div className="trip">
-            
             <TripCu expense={setAddExpense} />
 
             <div className="tripTransactions">
@@ -97,9 +97,9 @@ function TripTransaction({ head, date, amount }: any) {
 
 function TripCu({expense} :any) {
     return (
-
+        <>
         <div className="tripcu">
-
+            
             <div className="tripInfo">
                 <h4>Overall, You owe $10000</h4>
                 <p>Chirag B. owes you $200</p>
@@ -131,11 +131,8 @@ function TripCu({expense} :any) {
                 </div>
 
             </div>
-
         </div>
-
-
-
+        </>
     )
 
 }

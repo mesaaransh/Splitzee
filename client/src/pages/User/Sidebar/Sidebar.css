@@ -1,5 +1,5 @@
 .sidebar{
-    min-width: 300px;
+    min-width: 350px;
     background-color: var(--sec1);
     border-left: 1px solid hsl(0, 0%, 85%);
 
@@ -78,6 +78,16 @@
     position: relative;
 }
 
+.sidebarCategoryItem > .sidebarCategoryItemDeleteIcon{
+    display: none;
+}
+
+.sidebarCategoryItem:hover > .sidebarCategoryItemDeleteIcon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .sidebarCategoryItem:not(:nth-of-type(1)){
     margin-top: 30px;
 }
@@ -92,6 +102,26 @@
     box-shadow: 0px 3px 2px 0px hsla(0, 0%, 64%, 0.3);
 
 }
+
+.sidebarCategoryItemDeleteIcon{
+    
+    height: 35px;
+    aspect-ratio: 1;
+    color: var(--sec3);
+    margin-left: auto;
+    font-size: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    transition-duration: 100ms;
+}
+
+.sidebarCategoryItemDeleteIcon:hover{
+    color: var(--red1);
+}
+
 
 .sidebarCategoryItem > div{
     display: flex;
