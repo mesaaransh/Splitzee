@@ -6,38 +6,95 @@ import { TbUsersPlus } from "react-icons/tb";
 import { TbArrowBigUpLine } from "react-icons/tb";
 import { TbCash } from "react-icons/tb";
 import { TbPlus } from "react-icons/tb"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AddFriend from "../Forms/AddFriend";
+import axios from "axios";
+import config from "../../../config";
+
+import dateFormat from "dateformat";
+
+let token = sessionStorage.getItem('token')
 
 export default function Trip() {
-
+    
+    let id = window.location.pathname.split('/')[3];
     let [addExpense, setAddExpense] = useState(false);
+    let [addFriend, setAddFriend] = useState(false);
+
+    let [sectionData, setSectionData] = useState([]);
+    let [tData, setTData]= useState([]);
+
+    let[data, setData] = useState({
+        _id: '',
+        members: []
+    })
+
+    useEffect(() => {Fetcher()}, [id, data]);
+    async function Fetcher(){
+        axios.get(config.apiURL + 'trip/' + id, {
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'token': token
+            }
+        }).catch((err) => {
+            console.log(err);
+        }).then((resp: any) => {
+
+            if(resp && resp.status == 200){
+
+                let transactions: any = [];
+                let sectionData: any = [];
+                let tData: any = [];
+
+                setData(resp.data);
+                transactions = resp.data.transactions
+                transactions = Object.groupBy(transactions, ({date}: any) => date);
+
+                transactions = Object.keys(transactions).sort().reduce(
+                    (obj: any, key) => { 
+                      obj[key] = transactions[key]; 
+                      return obj;
+                    }, 
+                    {}
+                );
+
+                for(let key in transactions){
+                    sectionData.push({date: key, count: transactions[key].length})
+                    tData.push(transactions[key])
+                }
+
+                setSectionData(sectionData);
+                setTData(tData);
+                
+                console.log(tData);
+            }
+        })
+    }
+
+
     return (
         <>
-        <AddExpense display = {addExpense} setDisplay={setAddExpense}/>
+        <AddExpense display = {addExpense} setDisplay={setAddExpense} data={data} setData={setData}/>
+        <AddFriend display= {addFriend} setDisplay={setAddFriend} tripId={data._id} members={data.members} setData={setData}/>
 
         <div className="trip">
-            <TripCu expense={setAddExpense} />
+            <TripCu expense={setAddExpense} friend={setAddFriend} />
 
             <div className="tripTransactions">
 
-                <TripTransactionSection date={'Feburary 31, 2023'} num={'04'} val={'1234'}>
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                </TripTransactionSection>
+                {
+                    sectionData.map((item: any, index: number) => (
+                        <TripTransactionSection date={item.date} num={item.count}>
 
-                <TripTransactionSection date={'Feburary 31 2023'} num={'04'} val={'1234'}>
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                </TripTransactionSection>
+                        {
+                            tData[index].map((trans: any) => (
+                                <TripTransaction head={trans.description} date={trans.date} amount={trans.amount} />
+                            ))
+                        }
 
+                        </TripTransactionSection>
+                    ))
+                }
             </div>
 
         </div>
@@ -47,19 +104,17 @@ export default function Trip() {
 
 
 
-function TripTransactionSection({ date, num, val, children }: any) {
+function TripTransactionSection({ date, num, children }: any) {
 
     return (
 
         <div className="tripTransactionSection">
             <div className="tripTransactionSectionHeader">
-                <h3>{date}</h3>
+                <h3>{dateFormat(date, 'mmmm dd, yyyy')}</h3>
                 <div>
                     <p>No. of transactions: {num}</p>
-                    <p>Value: {`$${val}`}</p>
                 </div>
             </div>
-
             {children}
         </div>
 
@@ -76,7 +131,7 @@ function TripTransaction({ head, date, amount }: any) {
             <div className="tripTransactionIcon"></div>
             <div>
                 <h3>{head}</h3>
-                <h4 className="tripTransactionDate">{date}</h4>
+                <h4 className="tripTransactionDate">{dateFormat(date, 'mmmm dd yyyy')}</h4>
             </div>
 
             <h3 className="tripTransactionAmount">${amount}</h3>
@@ -95,7 +150,7 @@ function TripTransaction({ head, date, amount }: any) {
 }
 
 
-function TripCu({expense} :any) {
+function TripCu({expense, friend} :any) {
     return (
         <>
         <div className="tripcu">
@@ -125,7 +180,7 @@ function TripCu({expense} :any) {
                     See totals
                 </div>
 
-                <div className="tripAction actiongreen">
+                <div className="tripAction actiongreen" onClick={() => {friend(true)}}>
                     <div className="tripButton"><TbUsersPlus /></div>
                     Invite a friend
                 </div>

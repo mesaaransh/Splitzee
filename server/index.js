@@ -5,7 +5,8 @@ const { newUser, verifyUser, getFriends, addRequest, addFriend } = require('./Co
 const { connector } = require('./connector')
 const { verify } = require('./Controlers/verify')
 const { auth } = require('./Controlers/Middlewares/auth')
-const { addTrip, getTrips, deleteTrip } = require('./Controlers/trip')
+const { addTrip, getTrips, deleteTrip, getTrip, addMember } = require('./Controlers/trip')
+const { addExpense } = require('./Controlers/expense')
 
 const app = express()
 app.use(bodyParser.urlencoded({extended: true}))
@@ -24,8 +25,13 @@ app.post("/friends", auth, addRequest)
 
 
 app.get("/trip", auth, getTrips)
+app.get("/trip/:id", auth, getTrip)
 app.post("/trip", auth, addTrip)
 app.delete("/trip/:id", auth, deleteTrip)
+
+app.post("/member", auth, addMember)
+
+app.post("/expense", auth, addExpense )
 
 
 app.listen(8000, ()=>{console.log("----------AppStarted-----------");})

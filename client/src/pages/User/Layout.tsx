@@ -5,16 +5,18 @@ import Topbar from "./Topbar/Topbar"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import config from "../../config"
+import waiter from "../../waiter"
 
 export default function Layout() {
   let [auth, setAuth] = useState(false);
-  let [name, setName] = useState("");
+  let [userData, setUserData] = useState({});
 
   let navigator = useNavigate();
 
   useEffect(() => { authenticator() }, [])
   async function authenticator() {
 
+    await waiter(100)
     let token: any = ""
     token = sessionStorage.getItem('token');
 
@@ -27,7 +29,7 @@ export default function Layout() {
     }).then((resp: any) => {
       if (resp && resp.status == 200) {
         setAuth(true)
-        setName(resp.data.name)
+        setUserData(resp.data)
       }
       else {
         setAuth(false);
@@ -48,7 +50,7 @@ export default function Layout() {
                   <Outlet />
                 </div>
               </div>
-              <Sidebar name={name} />
+              <Sidebar userData={userData} />
             </div>
           </>
           :

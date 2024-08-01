@@ -13,11 +13,11 @@ async function auth(req, res, next){
                 next();
             }
             else{
-                throw('err')
+                throw('Cannot Authenticate Token')
             }
         }
         else{
-            throw('err')
+            throw('No Token')
         }
 
     } catch (error) {

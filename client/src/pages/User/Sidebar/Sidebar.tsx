@@ -8,10 +8,12 @@ import axios from "axios";
 import config from "../../../config";
 import dateFormat from "dateformat";
 
-export default function Sidebar(props: any) {
+export default function Sidebar({userData}: any) {
 
     let [display, setDisplay] = useState(false);
     let [trips, setTrips] = useState([]);
+
+    let navigator = useNavigate();
 
     useEffect(() => {Fetcher()}, []);
     async function Fetcher(){
@@ -27,6 +29,12 @@ export default function Sidebar(props: any) {
             setTrips(resp.data)
         })
     }
+
+    function logouthandle(){
+        sessionStorage.removeItem('token');
+        localStorage.removeItem('token')
+        navigator('/login')
+    }
     
     return (
         <>
@@ -35,7 +43,7 @@ export default function Sidebar(props: any) {
 
             <div className="sidebarProfile">
                 <h4>
-                    {props.name}
+                    {userData.name}
                 </h4>
                 <div className="sidebarProfilePic"></div>
             </div>
@@ -43,12 +51,15 @@ export default function Sidebar(props: any) {
             <SidebarCategory name="Trips" setDisplay={setDisplay}>
                 {
                     trips.map((trip: any) => (
-                        <CategoryItem name={trip.name} date={dateFormat(trip.startDate, 'dS mmmm yyyy')} id={trip._id} trips = {trips} setTrips = {setTrips} />
+                        <CategoryItem trip={trip} trips = {trips} setTrips = {setTrips} userId={userData.id}/>
                     ))
                 }
             </SidebarCategory>
-
-            <hr />
+            
+            <hr className="seperator" />
+            <button className="logout" onClick={logouthandle}>
+                <h4>Logout</h4>
+            </button>
 
         </div>
         </>
@@ -90,7 +101,7 @@ function SidebarCategory({name, setDisplay, children}: any) {
 
 }
 
-function CategoryItem({name, date, id, trips, setTrips}: any) {
+function CategoryItem({trip: {name, startDate: date, _id: id, owner}, trips, setTrips, userId}: any) {
 
     const navigator = useNavigate();
 
@@ -125,10 +136,13 @@ function CategoryItem({name, date, id, trips, setTrips}: any) {
 
             <div>
                 <h4>{name}</h4>
-                <h5>{date}</h5>
+                <h5>{ dateFormat(date, "dS mmmm yyyy")}</h5>
             </div>
 
-            <div className="sidebarCategoryItemDeleteIcon" onClick={deleteHandle}> <TbTrashX/> </div>
+            <div className="sidebarCategoryItemDeleteIcon" onClick={deleteHandle}>
+                {owner == userId? <TbTrashX/>: <></>}
+                
+            </div>
         </div>
     )
 }

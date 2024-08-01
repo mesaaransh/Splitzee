@@ -22,7 +22,7 @@ let tripModel = new mongoose.Schema({
     transactions:{
         type: [mongoose.Types.ObjectId],
         default: [],
-        ref: ''
+        ref: 'Expense'
     }
 
 }, {

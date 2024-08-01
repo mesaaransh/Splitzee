@@ -154,3 +154,20 @@
     transition-duration: 200ms;
     
 }
+.sidebar > .seperator{
+
+    width: 100%;
+    background-color: var(--sec2);
+    height: 2px;
+    border: 0px solid;
+
+    margin: 20px 0;
+
+}
+
+.logout{
+    border: 0px solid;
+    background-color: transparent;
+    color: var(--red1);
+    border-radius: 8px;
+}

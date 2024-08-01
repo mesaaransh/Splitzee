@@ -32,7 +32,7 @@ export default function LoginForm() {
             if(response.status == 200){
                 sessionStorage.setItem('token', response.data)
                 await waiter(1000)
-                navigator('/user/home')
+                navigator('/user/home', {replace: true})
             }
         })
 
