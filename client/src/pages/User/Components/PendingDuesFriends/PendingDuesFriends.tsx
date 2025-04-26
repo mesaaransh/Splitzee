@@ -6,10 +6,10 @@ export default function PendingDuesFriends() {
             <h3>Pending Dues</h3>
 
             <div className="friends">
-                <Friend name={"Chirag Bansal"} amount={'12345'} />
-                <Friend name={"Chirag Bansal"} amount={'12345'} />
-                <Friend name={"Chirag Bansal"} amount={'12345'} />
-                <Friend name={"Chirag Bansal"} amount={'12345'} />
+                <Friend name={"Chirag Bansal"} amount={'XXXX'} />
+                <Friend name={"Nandan Garg"} amount={'XXXX'} />
+                <Friend name={"Abhay Bagla"} amount={'XXXX'} />
+                <Friend name={"Vivek Arora"} amount={'XXXX'} />
             </div>
 
         </div>

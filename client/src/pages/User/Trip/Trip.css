@@ -1,47 +1,69 @@
 .tripcu{
-    display: flex;
-    min-height: 200px;
+
     width: 100%;
     background-color: var(--sec1);
     border-radius: 15px;
     padding: 20px;
 
-    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
 
+    margin-top: 20px;
     border: 1px solid var(--sep);
+
 }
 
-.tripInfo > p {
-    margin-top: 5px;
+.tripInfoTable{
+
+    border: 0px solid black;
+    border-collapse: collapse;
+
 }
 
-.tripInfo >p:nth-of-type(1) {
-    margin-top: 20px;
+.tripInfoTable > thead > td{
+    padding: 10px 20px;
+}
+.tripInfoTable > tr > td{
+    padding: 0px 20px;
+}
+
+.data{
+    font-style: italic;
+    text-align: center;
+    font-size: 0.9rem;
+    border-left: 2px solid var(--sec3);
+}
+
+.inflow{
+    color: var(--red1);
+}
+
+.outflow{
+    color: var(--green1);
 }
 
 .tripActions{
-
     display: flex;
     flex-wrap: wrap;
-    margin-left: auto;
-    width: 55%;
+    justify-content: flex-end;
+    
+    width: 50%;
     height: 100%;
-
     gap: 10px;
 }
 
 .tripAction{
+
+    flex: 0 0 calc(50% - 10px);
     display: flex;
     align-items: center;
-    flex: 1;
 
     padding: 15px 20px;
     border-radius: 20px;
-    flex-grow: 1;
 
     cursor: pointer;
-
     transition-duration: 200ms;
+
 }
 
 .tripAction:hover{

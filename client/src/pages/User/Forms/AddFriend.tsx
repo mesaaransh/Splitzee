@@ -1,42 +1,35 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { FaXmark } from "react-icons/fa6";
 import config from "../../../config";
+import { FaXmark } from "react-icons/fa6";
+import { User } from "../../../schemas/user";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import FriendSchema from "../../../schemas/friend";
+import { useState } from "react";
 
 
-export default function AddFriend({display, setDisplay, tripId, members, setData}: any) {
-    
-    let [friends, setFriends] = useState([])
+export default function AddFriend({ display, setDisplay, trip }: any) {
 
     function closeHandle() {
         setDisplay(false);
     }
 
-    useEffect(() => {Fetcher()}, []);
-    async function Fetcher(){
-        let token = sessionStorage.getItem('token')
-        
-        axios.get(config.apiURL + 'friends', {
-            headers:{
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'token': token
-            }
-        }).catch((err) => {
-            console.log(err);
-        }).then((resp: any) => {
-            setFriends(resp.data.friends)
-            console.log(resp.data.friends);
-            
-        })
-    }
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['Friends'],
+        queryFn: (): Promise<User> => (
+            axios.get<User>(config.apiURL + 'friends', {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'token': sessionStorage.getItem('token')
+                }
+            }).then((data) => {
+                return data.data
+            })
+        ),
+        enabled: !!trip
+    })
 
-    function friendChecker(id: any){
-        for(let i = 0; i < members.length; i++){
-            if(members[i]._id == id){
-                return true;
-            }
-        }
-        return false;
+    function isFriendInTrip(friendId: string) {
+        return trip.members.some((e: FriendSchema) => e._id == friendId)
     }
 
     return (
@@ -44,15 +37,21 @@ export default function AddFriend({display, setDisplay, tripId, members, setData
             <div className="popupblur" style={{ display: display ? 'flex' : 'none' }}></div>
             <div className="popupFrom" style={{ display: display ? 'flex' : 'none' }}>
                 <h2>Invite Friends</h2>
-
-                <div className="friendList">
-                    {friends.map((friend: any) => {
-                        let fri = friendChecker(friend._id)
-                        return(
-                            <Friend data={friend} tripId = {tripId} fri={fri} setData = {setData} />
-                        )
-                    } )}
-                </div>
+                <p>{trip.name}</p>
+                {
+                    isLoading ?
+                        <>Loading..</>
+                        :
+                        <div className="friendList">
+                            {
+                                data?.friends?.map((friend) => {
+                                    return (
+                                        <Friend data={friend} tripId={trip._id} fri={isFriendInTrip(friend._id)} />
+                                    )
+                                })
+                            }
+                        </div>
+                }
 
                 <div className="closeButton" onClick={closeHandle}>
                     <FaXmark />
@@ -63,37 +62,47 @@ export default function AddFriend({display, setDisplay, tripId, members, setData
 }
 
 
-function Friend({data, tripId, fri, setData}: any){
+function Friend({ data, tripId, fri }: any) {
 
-    function addHandler(){
-        let token = sessionStorage.getItem('token')
-        axios.post(config.apiURL + 'member', {
-            tripId: tripId,
-            friendId: data._id
-        },{
-            headers:{
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'token': token
-            }
-        }).catch((err) => {
-            console.log(err);  
-        }).then((resp) => {
-            if(resp && resp.status == 200){
-                setData(resp.data)
-            }
-            console.log(resp);
-        })
+    let [suc, setSuc] = useState(false);
 
+    let query = useQueryClient()
+    let addFriend = useMutation({
+        mutationKey: ['AddFriend', data._id],
+        mutationFn: () => (
+            axios.post(config.apiURL + 'member', {
+                tripId: tripId,
+                friendId: data._id
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'token': sessionStorage.getItem('token')
+                }
+            })
+        ),
+        onSuccess: () => {
+            query.invalidateQueries({ queryKey: ['Friends'] })
+            setSuc(true)
+        },
+        onError: (err) => { console.log(err) }
+    })
+
+    function addHandler() {
+        addFriend.mutate();
     }
-    
 
-    return(
+    return (
         <div className="friendListFriend">
             <div>
                 <h4>{data.name}</h4>
                 <p>{data.email}</p>
             </div>
-            {!fri?<button className="pop" onClick={addHandler}>Add to trip</button>:<button disabled>In the trip</button>}
+            {
+                addFriend.isPending ?
+                    <button disabled>Loading...</button>
+                    :
+                    fri || suc?<button disabled>In the trip</button>:<button className="pop" onClick={addHandler}>Add to trip</button>
+            }
         </div>
 
     )

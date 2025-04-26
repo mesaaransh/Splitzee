@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react"
 import config from "../../../config";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import waiter from "../../../waiter";
 
 export default function SignupForm() {
@@ -9,6 +10,7 @@ export default function SignupForm() {
     let [formData, setFromData] = useState({
         password: ""
     });
+
     let [error, setError] = useState("")
     let [disable, setDisable] = useState(true)
     let [alert, setAlert] = useState("none");
@@ -24,25 +26,28 @@ export default function SignupForm() {
         });
     }
 
+    const signup = useMutation({
+        mutationKey: ['signup'],
+        mutationFn: (formData: any) =>
+            axios.post(config.apiURL + 'user', formData, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then((data) => (data.data)),
+        onSuccess: async () => {
+            window.alert('Login Successful')
+            await waiter(1000);
+            navigator('/login');
+        },
+        onError: (err)=>{
+            setError(err.message)
+            console.log(err);
+        }
+    })
 
     async function submitHandler(e: any) {
         e.preventDefault();
-
-        axios.post(config.apiURL + 'user', formData, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }).catch((err) => {
-            setError(err.response.data)
-            console.log(err)
-        }).then(async (response: any) => {
-            if (response && response.status == 200) {
-                setAlert('flex')
-                await waiter(2000)
-                navigator('/login')
-            }
-        })
-
+        signup.mutate(formData)
     }
 
     function validatePassword(e: any) {
@@ -59,13 +64,6 @@ export default function SignupForm() {
 
     return (
         <>
-            <div className="signupSuccess" style={{ display: alert }}>
-                <div>
-                    <h1>Sign Up Successfull!</h1>
-                    <p>Welcome to our family.</p>
-                </div>
-            </div>
-
             <form className="signupForm" onSubmit={submitHandler}>
 
                 <div className="formRow">
@@ -104,7 +102,7 @@ export default function SignupForm() {
                 </div>
 
                 <div className="formFooter">
-                    <div className="remember">
+                    <div className="rm">
                         <input type="checkbox" />
                         <label> Remember Me? </label>
                     </div>
@@ -113,7 +111,7 @@ export default function SignupForm() {
                 </div>
 
                 <p className="error">{error}</p>
-                <button type="submit" disabled={disable}>Sign Up</button>
+                <button type="submit" disabled={disable}>{signup.isPending?'Setting Up Everything':'Sign Up'}</button>
 
             </form>
         </>

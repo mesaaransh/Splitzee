@@ -6,13 +6,9 @@ async function addExpense(req, res){
     try {
 
         let data = req.body;
-        let newData = {
-            ...data,
-            trip: data.tripId
-        }
-        let currTrip = await trip.findById(data.tripId);
-        let newExpense = new expense(newData);
-
+        let currTrip = await trip.findById(data.trip);
+        let newExpense = new expense(data);
+        
         currTrip.transactions.push(newExpense._id);
         await currTrip.save();
         await newExpense.save();

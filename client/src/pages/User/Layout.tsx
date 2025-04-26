@@ -6,14 +6,26 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import config from "../../config"
 import waiter from "../../waiter"
+import { User } from "../../schemas/user"
 
 export default function Layout() {
-  let [auth, setAuth] = useState(false);
-  let [userData, setUserData] = useState({});
 
+  let [auth, setAuth] = useState(true);
+  let [userData, setUserData] = useState<User>({
+    name: '',
+    email: '',
+    phone: '',
+    _id: '',
+    friends: [],
+    requests: []
+  });
+
+
+  let [activeTrip, setActiveTrip] = useState(null);
   let navigator = useNavigate();
 
   useEffect(() => { authenticator() }, [])
+
   async function authenticator() {
 
     await waiter(100)
@@ -47,10 +59,10 @@ export default function Layout() {
               <div className="mainContent">
                 <Topbar />
                 <div className="content">
-                  <Outlet />
+                  <Outlet context={[userData, activeTrip]} />
                 </div>
               </div>
-              <Sidebar userData={userData} />
+              <Sidebar userData={userData} setActiveTrip={setActiveTrip} activeTrip={activeTrip} />
             </div>
           </>
           :

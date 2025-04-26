@@ -2,53 +2,49 @@ import { useEffect, useState } from "react";
 import "./Friends.css"
 import axios from "axios";
 import config from "../../../config";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { User } from "../../../schemas/user";
 
 let token = sessionStorage.getItem('token')
 
 export default function Friends() {
 
-  let [data, setData]: any = useState({
-    friends: [],
-    requests: []
+  let {data, isLoading, error} = useQuery<User>({
+    queryKey: ['FriendReq'],
+    queryFn: async () => (
+      await axios.get(config.apiURL + 'friends', {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'token': token
+        }
+      }).then(data => data.data)
+    )
   })
-
-  useEffect(() => { Fetcher() }, [])
-  async function Fetcher() {
-
-    let token = sessionStorage.getItem('token')
-    let resp = await axios.get(config.apiURL + 'friends', {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'token': token
-      }
-    })
-    setData(resp.data);
-  }
 
   return (
     <>
       <AddFriend />
-      <h2 className="userFriendsTag"> {data.friends.length != 0 ? "Your Friends" : ""} </h2>
+      <h2 className="userFriendsTag">Your Friends</h2>
       <div className="userFriends">
         {
-          data.friends.length != 0 ?
-            data.friends.map((friend: any) => (
-              <Friend name={friend.name} message={'You owe'} amount={200} />
+          data?.friends?.length != 0 ?
+            data?.friends?.map((friend: any, i) => (
+              <Friend key={i} name={friend.name} message={'You owe'} amount={200} />
             )) :
-            <></>
+            <p>You Have no friends</p>
         }
       </div>
 
-      <h2 className="userFriendsTag">{data.requests.length != 0? "Friend Requests": ""}</h2>
+      <h2 className="userFriendsTag">Friend Requests</h2>
       <div className="userFriends">
 
         {
-          data.requests.length != 0 ?
-            data.requests.map((friend: any) => (
-              <FriendReq name={friend.name} email={friend.email} id={friend._id} setData={setData} data={data} />
+          data?.requests?.length != 0 ?
+            data?.requests?.map((friend: any) => (
+              <FriendReq name={friend.name} email={friend.email} id={friend._id} data={data} />
             ))
             :
-            <></>
+            <p>You have no pending requests</p>
         }
 
       </div>
@@ -68,41 +64,26 @@ function Friend({ name, message, amount }: any) {
   );
 }
 
-function FriendReq({ name, email, id, setData }: any) {
+function FriendReq({ name, email, id }: any) {
   
   let[error, setError] = useState('')
-  async function acceptHandle() {
+  let query = useQueryClient();
 
-    axios.get(config.apiURL + 'friends/' + id + '?mode=accept', {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'token': token
-      }
-    }).catch((err) => {
-      console.log(err);
-      setError(err.response.data)
-    }).then((resp: any) => {
-      console.log(resp);
-      setData(resp.data)
-    })
-
-  }
-  async function rejectHandle() {
-
-
-    axios.get(config.apiURL + 'friends/' + id + '?mode=reject', {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'token': token
-      }
-    }).catch((err) => {
-      console.log(err);
-      setError(err.response.data)
-    }).then((resp: any) => {
-      console.log(resp);  
-      setData(resp.data)
-    })
-  }
+  let decHandle = useMutation({
+    mutationKey: ['RequestDecision', id],
+    mutationFn: (mode: string) => (
+      axios.get(config.apiURL + `friends/${id}?mode=${mode}`, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'token': token
+        }
+      }).then(data => data.data)
+    ),
+    onSuccess: () => {
+      query.invalidateQueries({queryKey: ['Req', email]})
+      query.invalidateQueries({queryKey: ['FriendReq']})
+    }
+  })
 
   return (
     <div className="userFriend">
@@ -113,8 +94,8 @@ function FriendReq({ name, email, id, setData }: any) {
       </div>
 
       <div className="buttons">
-        <button className="accept pop" onClick={acceptHandle}>Accept</button>
-        <button className="reject shake" onClick={rejectHandle}>Reject</button>
+        <button className="accept pop" onClick={() => {decHandle.mutate('accept')}}>Accept</button>
+        <button className="reject shake" onClick={() => {decHandle.mutate('reject')}}>Reject</button>
       </div>
       <p className="error">{error}</p>
     </div>
@@ -131,27 +112,28 @@ function AddFriend() {
     setEmail(e.target.value);
   }
 
+  let request = useMutation({
+    mutationKey: ['Req', email],
+    mutationFn: async (email: string) => (
+      await axios.post(config.apiURL + 'friends', { email }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'token': token
+        }
+      }).then(data => data.data)
+    ),
+    onSuccess: () => {
+      setVaah('Request Sent');
+    },
+    onError: (err: string) => {
+      setErr(err)
+    }
+  })
   async function submitHandle(e: any) {
     e.preventDefault()
     setErr('')
     setVaah('')
-
-    axios.post(config.apiURL + 'friends', { email }, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'token': token
-      }
-    }).catch((err) => {
-      console.log(err);
-      setErr(err.response.data)
-    }).then((resp) => {
-      console.log(resp);
-      if(resp && resp.status == 200){
-        setVaah('Request Sent');
-        e.target.value = "";
-      }
-    })
-
+    request.mutate(email)
   }
 
   return (

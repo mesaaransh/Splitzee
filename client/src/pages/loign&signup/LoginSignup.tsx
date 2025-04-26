@@ -20,7 +20,7 @@ export default function LoginSignup({page}: any) {
 
         <h1>{page}</h1>
         <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing <br /> elit. Nisi, sapiente!
+          Struggling to keep track of your expenses? <br /> Dont worry, We are here for you!
         </p>
 
         {page=='Login'?

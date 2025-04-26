@@ -1,64 +1,63 @@
-import axios from "axios"
 import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
 import config from "../../../config"
-import waiter from "../../../waiter"
 
 export default function LoginForm() {
 
     let [formData, setFormData] = useState({})
-    let [error, setError] = useState("")
     const navigator = useNavigate()
 
-    function formInputHandler(e: any){
-        setError("")
+    function formInputHandler(e: any) {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         })
     }
 
-    async function formSubmitHandler(e: any){
+    const login = useMutation({
+        mutationKey: ['login'],
+        mutationFn: (formData: any) =>
+            axios.post(config.apiURL + 'login', formData, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then((data) => (data.data)),
+        onSuccess: (resp) => {
+            console.log(resp);
+            sessionStorage.setItem('token', resp)
+            navigator('/user/home', { replace: true })
+        },
+        onError: (err)=>{
+            console.log(err);
+        }
+    })
+
+    async function formSubmitHandler(e: any) {
         e.preventDefault()
-
-        axios.post(config.apiURL + 'login', formData, {
-            headers:{
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }).catch((err) => {
-            setError(err.response.data)
-            console.log(err)
-        }).then(async (response: any) => {
-            if(response.status == 200){
-                sessionStorage.setItem('token', response.data)
-                await waiter(1000)
-                navigator('/user/home', {replace: true})
-            }
-        })
-
+        login.mutate(formData);
     }
-
-
-    
 
     return (
         <form className="signupForm" onSubmit={formSubmitHandler}>
-            
+
             <div className="formRow">
                 <div className="formControl">
                     <label htmlFor="">Email</label>
-                    <input type="email" name="email" onInput={formInputHandler}/>
+                    <input type="email" name="email" onInput={formInputHandler} />
                 </div>
             </div>
+
             <div className="formRow">
                 <div className="formControl">
                     <label htmlFor="">Password</label>
-                    <input type="password" name="password" onInput={formInputHandler}/>
+                    <input type="password" name="password" onInput={formInputHandler} />
                 </div>
             </div>
 
             <div className="formFooter">
-                <div>
+                <div className="rm">
                     <input type="checkbox" />
                     <label htmlFor="">Remember Me?</label>
                 </div>
@@ -66,8 +65,8 @@ export default function LoginForm() {
                 <label htmlFor="">Frogot Password?</label>
             </div>
 
-            <p className="error">{error}</p>
-            <button type="submit">Login</button>
+            <p className="error">{login.error?.message}</p>
+            <button type="submit" disabled={login.isPending}>{login.isPending?'Loggin In':'Login'}</button>
 
         </form>
     )
