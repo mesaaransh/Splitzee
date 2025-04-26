@@ -30,7 +30,8 @@ export default function Friends() {
           data?.friends?.length != 0 ?
             data?.friends?.map((friend: any, i) => (
               <Friend key={i} name={friend.name} message={'You owe'} amount={200} />
-            )) :
+            )) 
+            :
             <p>You Have no friends</p>
         }
       </div>

@@ -1,5 +1,5 @@
-import { MemberFlow } from "../../../schemas/memberflows";
-import { Trip } from "../../../schemas/trip";
+import { MemberFlow } from "../../../../schemas/memberflows";
+import { Trip } from "../../../../schemas/trip";
 
 function CurrUserFlows(trip: Trip, currentUserId: string): MemberFlow[] {
     const flowsMap: Record<string, MemberFlow> = {};

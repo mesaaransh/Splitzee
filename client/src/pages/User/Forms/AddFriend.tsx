@@ -35,26 +35,27 @@ export default function AddFriend({ display, setDisplay, trip }: any) {
     return (
         <>
             <div className="popupblur" style={{ display: display ? 'flex' : 'none' }}></div>
-            <div className="popupFrom" style={{ display: display ? 'flex' : 'none' }}>
-                <h2>Invite Friends</h2>
-                <p>{trip.name}</p>
-                {
-                    isLoading ?
-                        <>Loading..</>
-                        :
-                        <div className="friendList">
-                            {
-                                data?.friends?.map((friend) => {
-                                    return (
-                                        <Friend data={friend} tripId={trip._id} fri={isFriendInTrip(friend._id)} />
-                                    )
-                                })
-                            }
-                        </div>
-                }
-
-                <div className="closeButton" onClick={closeHandle}>
-                    <FaXmark />
+            <div className="formContainer" style={{ display: display ? 'flex' : 'none' }}>
+                <div className="popupFrom">
+                    <h2>Invite Friends</h2>
+                    <p>{trip.name}</p>
+                    {
+                        isLoading ?
+                            <>Loading..</>
+                            :
+                            <div className="friendList">
+                                {
+                                    data?.friends?.map((friend) => {
+                                        return (
+                                            <Friend data={friend} tripId={trip._id} fri={isFriendInTrip(friend._id)} />
+                                        )
+                                    })
+                                }
+                            </div>
+                    }
+                    <div className="closeButton" onClick={closeHandle}>
+                        <FaXmark />
+                    </div>
                 </div>
             </div>
         </>

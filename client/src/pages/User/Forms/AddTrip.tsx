@@ -45,33 +45,35 @@ export default function AddTrip({ display, setDisplay }: any) {
     return (
         <>
             <div className="popupblur" style={{ display: display ? 'flex' : 'none' }}></div>
-            <div className="popupFrom" style={{ display: display ? 'flex' : 'none' }}>
-                <h2>Trip Details</h2>
-                
-                {
-                    trip.isPending?
-                    <></>
-                    :
-                    <form className="form" onSubmit={submitHandler}>
-                        <div className="row">
-                            <div className="col">
-                                <label htmlFor="name">Name</label>
-                                <input type="text" name="name" id="name" onChange={inputHandler} />
+            <div className="formContainer" style={{ display: display ? 'flex' : 'none' }}>
+                <div className="popupFrom">
+                    <h2>Trip Details</h2>
+                    
+                    {
+                        trip.isPending?
+                        <></>
+                        :
+                        <form className="form" onSubmit={submitHandler}>
+                            <div className="row">
+                                <div className="col">
+                                    <label htmlFor="name">Name</label>
+                                    <input type="text" name="name" id="name" required onChange={inputHandler} />
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="col">
-                                <label htmlFor="date">Start Date</label>
-                                <input type="date" name="startDate" id="date" onChange={inputHandler} />
+                            <div className="row">
+                                <div className="col">
+                                    <label htmlFor="date">Start Date</label>
+                                    <input type="date" name="startDate" id="date" required onChange={inputHandler} />
+                                </div>
                             </div>
-                        </div>
 
-                        <button type="submit">Save Details</button>
-                    </form>
-                }
+                            <button type="submit">Add Trip</button>
+                        </form>
+                    }
 
-                <div className="closeButton" onClick={closeHandle}>
-                    <FaXmark />
+                    <div className="closeButton" onClick={closeHandle}>
+                        <FaXmark />
+                    </div>
                 </div>
             </div>
         </>

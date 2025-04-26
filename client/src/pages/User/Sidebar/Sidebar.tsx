@@ -37,32 +37,33 @@ export default function Sidebar({ userData, setActiveTrip, activeTrip }: any) {
         <>
             <AddTrip display={display} setDisplay={setDisplay} trips={data} />
             <div className="sidebar">
-
-                <div className="sidebarProfile">
-                    <div>
-                        <h4>
-                            {userData.name}
-                        </h4>
-                        <p>{userData.email}</p>
+                <div className="sidebarContainer">
+                    <div className="sidebarProfile">
+                        <div>
+                            <h4>
+                                {userData.name}
+                            </h4>
+                            <p>{userData.email}</p>
+                        </div>
+                        <div className="sidebarProfilePic"></div>
                     </div>
-                    <div className="sidebarProfilePic"></div>
+
+                    <SidebarCategory name="Trips" setDisplay={setDisplay}>
+                        {
+                            isFetching || isLoading ?
+                                <>Fetching details...</>
+                                :
+                                data?.map((trip: any) => (
+                                    <CategoryItem setActiveTrip={setActiveTrip} active={activeTrip} key={trip._id} trip={trip} />
+                                ))
+                        }
+                    </SidebarCategory>
+
+                    <hr className="seperator" />
+                    <button className="logout" onClick={logouthandle}>
+                        <h4>Logout</h4>
+                    </button>
                 </div>
-
-                <SidebarCategory name="Trips" setDisplay={setDisplay}>
-                    {
-                        isFetching || isLoading ?
-                            <>Fetching details...</>
-                            :
-                            data?.map((trip: any) => (
-                                <CategoryItem setActiveTrip={setActiveTrip} active={activeTrip} key={trip._id} trip={trip} />
-                            ))
-                    }
-                </SidebarCategory>
-
-                <hr className="seperator" />
-                <button className="logout" onClick={logouthandle}>
-                    <h4>Logout</h4>
-                </button>
 
             </div>
         </>

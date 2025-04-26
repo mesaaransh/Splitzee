@@ -2,7 +2,7 @@ import { TbArrowBigUpLine, TbPlus, TbCash, TbUsersPlus } from "react-icons/tb";
 import { useEffect, useState } from "react";
 import { MemberFlow } from "../../../schemas/memberflows";
 import { useOutletContext } from "react-router-dom";
-import CurrUserFlows from "./flowCalc";
+import CurrUserFlows from "./functions/flowCalc";
 
 
 export function TripCu({ expense, friend, trip }: any) {
