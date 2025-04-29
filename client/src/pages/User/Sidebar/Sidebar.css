@@ -89,10 +89,6 @@
     position: relative;
 }
 
-.sidebarCategoryItem > .sidebarCategoryItemDeleteIcon{
-    display: none;
-}
-
 .sidebarCategoryItem:hover > .sidebarCategoryItemDeleteIcon{
     display: flex;
     align-items: center;

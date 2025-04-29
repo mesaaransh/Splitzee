@@ -5,7 +5,7 @@ import { useOutletContext } from "react-router-dom";
 import CurrUserFlows from "./functions/flowCalc";
 
 
-export function TripCu({ expense, friend, trip }: any) {
+export function TripCu({ expense, friend, total, trip }: any) {
 
     let [flows, setFlows] = useState<MemberFlow[]>([])
     let [userData, _]: any = useOutletContext();
@@ -64,7 +64,7 @@ export function TripCu({ expense, friend, trip }: any) {
                         Add an expense
                     </div>
 
-                    <div className="tripAction actionred">
+                    <div className="tripAction actionred" onClick={() => { total(true); }}>
                         <div className="tripButton"><TbCash /></div>
                         See totals
                     </div>

@@ -20,6 +20,10 @@ function CurrUserFlows(trip: Trip, currentUserId: string): MemberFlow[] {
         const splitAmount = Math.round(amount / members.length);
         const userinMember = members.includes(currentUserId);
 
+        if(!userinMember && financer !== currentUserId){
+            continue;
+        }
+
         if (userinMember) {
             if (financer === currentUserId) {
                 for (const memberId of members) {
@@ -28,14 +32,10 @@ function CurrUserFlows(trip: Trip, currentUserId: string): MemberFlow[] {
                 }
             }
             else {
-                for (const memberId of members) {
-                    if (memberId == currentUserId) continue;
-                    flowsMap[memberId].inflow += splitAmount;
-                }
                 flowsMap[financer].inflow += splitAmount;
             }
         }
-        else {
+        else{
             for (const memberId of members) {
                 flowsMap[memberId].outflow += splitAmount;
             }

@@ -25,4 +25,22 @@ async function addExpense(req, res){
 
 }
 
-module.exports = { addExpense }
+
+async function delExpense(req, res){
+
+    try{
+
+        let expenseId = req.params.id;
+        await expense.findByIdAndDelete(expenseId)
+        res.status(200);
+        res.send({})
+
+    }
+    catch(err){
+        res.status(400);
+        res.send(err)
+    }
+
+}
+
+module.exports = { addExpense, delExpense }

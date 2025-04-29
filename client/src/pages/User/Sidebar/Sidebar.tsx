@@ -6,14 +6,15 @@ import config from "../../../config";
 import AddTrip from "../Forms/AddTrip";
 import { TbPlus } from "react-icons/tb";
 import { TbTrashX } from "react-icons/tb";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function Sidebar({ userData, setActiveTrip, activeTrip }: any) {
+
+    console.log(userData);
     
     let [display, setDisplay] = useState(false);
     let navigator = useNavigate();
-    const location = useLocation();
 
     const { data, isLoading, isFetching }: any = useQuery({
         queryKey: ['Trips'],
@@ -53,9 +54,12 @@ export default function Sidebar({ userData, setActiveTrip, activeTrip }: any) {
                             isFetching || isLoading ?
                                 <>Fetching details...</>
                                 :
+                                data.length?
                                 data?.map((trip: any) => (
-                                    <CategoryItem setActiveTrip={setActiveTrip} active={activeTrip} key={trip._id} trip={trip} />
+                                    <CategoryItem setActiveTrip={setActiveTrip} active={activeTrip} key={trip._id} trip={trip} userId={userData.id}/>
                                 ))
+                                :
+                                <>No Trips Yet!</>
                         }
                     </SidebarCategory>
 
@@ -127,7 +131,9 @@ function CategoryItem({ trip: { name, startDate: date, _id: id, owner }, userId,
             })
         ),
         onSuccess: () => {
-            
+            window.alert('Trip Deleted')
+            navigator('/user')
+            queryClient.invalidateQueries({queryKey: ['Trips']})
         }
 
     })
@@ -138,6 +144,7 @@ function CategoryItem({ trip: { name, startDate: date, _id: id, owner }, userId,
 
     return (
         <div className={id==active?"sidebarCategoryItem activeSidebarItem":"sidebarCategoryItem"} onClick={clickHandler}>
+
             <div className="sidebarCategoryItemIcon"> </div>
 
             <div>
@@ -146,8 +153,9 @@ function CategoryItem({ trip: { name, startDate: date, _id: id, owner }, userId,
             </div>
 
             <div className="sidebarCategoryItemDeleteIcon" onClick={deleteHandle}>
-                {owner == userId ? <TbTrashX /> : <></>}
+                {owner === userId? <TbTrashX /> : <></>}
             </div>
+
         </div>
     )
 }

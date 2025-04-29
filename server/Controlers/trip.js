@@ -117,22 +117,28 @@ async function addMember(req, res){
 
 async function deleteTrip(req, res){
 
-    let tripId = req.params.id;
-    let currTrip = await trip.findById(tripId);
-    let tokenData = req.tokenData;
-
-    if(currTrip.owner == tokenData.id){
-        await trip.findByIdAndDelete(tripId)
-        res.status(200);
-        res.send({})
+    try{
+        let tripId = req.params.id;
+        let currTrip = await trip.findById(tripId);
+        let tokenData = req.tokenData;
+    
+        if(currTrip.owner == tokenData.id){
+            await trip.findByIdAndDelete(tripId)
+            res.status(200);
+            res.send({})
+        }
+        else if(currTrip.members.include(tokenData.id)){
+            currTrip.members.splice(currTrip.members.indexOf(tokenData.id), 1);
+            currTrip.save();
+        }
+        else{
+            res.status(401);
+            res.send("zyada chod mein?")
+        }
     }
-    else if(currTrip.members.include(tokenData.id)){
-        currTrip.members.splice(currTrip.members.indexOf(tokenData.id), 1);
-        currTrip.save();
-    }
-    else{
-        res.status(401);
-        res.send("zyada chod mein?")
+    catch(err){
+        res.status(400);
+        res.send(err)
     }
 
 }

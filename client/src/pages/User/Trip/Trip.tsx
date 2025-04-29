@@ -8,11 +8,12 @@ import AddFriend from "../Forms/AddFriend";
 import axios from "axios";
 import config from "../../../config";
 import dateFormat from "dateformat";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TripCu } from "./TripCU";
 import { Transaction } from "../../../schemas/transaction";
 import { Trip } from "../../../schemas/trip";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import Totals from "./Totals";
 
 
 export default function Trips() {
@@ -23,6 +24,7 @@ export default function Trips() {
 
     let [addExpense, setAddExpense] = useState(false);
     let [addFriend, setAddFriend] = useState(false);
+    let [seeTotal, setSeeTotal] = useState(false);
     let [groupedData, setGroupedData]:any = useState([])
 
     const { data, isLoading, error } = useQuery({
@@ -50,16 +52,17 @@ export default function Trips() {
         <>
             <AddExpense display={addExpense} setDisplay={setAddExpense} trip={data} />
             <AddFriend display={addFriend} setDisplay={setAddFriend} trip={data}/>
+            <Totals display={seeTotal} setDisplay={setSeeTotal} trip={data} />
 
             <div className="trip">
 
-                <TripCu expense={setAddExpense} friend={setAddFriend} trip={data} />
+                <TripCu expense={setAddExpense} friend={setAddFriend} total={setSeeTotal} trip={data} />
                 <div className="tripTransactions">
                 {
                     Object.keys(groupedData).sort().map((key, i) => (
-                        <TripTransactionSection date={key} num={groupedData[key].length}>
-                            {groupedData[key].map((t: Transaction) => (
-                                <TripTransaction head={t.description} date={t.date} amount={t.amount} />
+                        <TripTransactionSection key={i} date={key} num={groupedData[key].length}>
+                            {groupedData[key].map((t: any, i: number) => (
+                                <TripTransaction key={i} data={t} />
                             ))}
                         </TripTransactionSection>
                     ))
@@ -92,23 +95,51 @@ function TripTransactionSection({ date, num, children }: any) {
 }
 
 
-function TripTransaction({ head, date, amount }: any) {
+function TripTransaction(data: any) {
+
+    let [_, id]: any = useOutletContext();
+    
+    data = data.data
+    function delHandle(){
+        deleteExpense.mutate()
+    }
+
+    let query = useQueryClient()
+
+    let deleteExpense = useMutation({
+        mutationKey: ['DeleteExpense', data._id],
+        mutationFn: () => (
+            axios.delete(config.apiURL + 'expense/' + data._id, {
+                headers: {
+                    token: sessionStorage.getItem('token')
+                }
+            })
+        ),
+        onSuccess: (data) => {
+            console.log(data);
+            query.invalidateQueries({queryKey: ['transactions', id]})
+
+        },
+        onError: (err) => {
+            console.log(err);
+        }
+    })
 
     return (
 
         <div className="tripTransaction">
             <div className="tripTransactionIcon"></div>
             <div>
-                <h3>{head}</h3>
-                <h4 className="tripTransactionDate">{dateFormat(date, 'mmmm dd yyyy')}</h4>
+                <h3>{data.description}</h3>
+                <h4 className="tripTransactionDate">{dateFormat(data.date, 'mmmm dd yyyy')}</h4>
             </div>
 
-            <h3 className="tripTransactionAmount">${amount}</h3>
+            <h3 className="tripTransactionAmount">${data.amount}</h3>
             <div className="tripTransactionIcons">
                 <div className="bookmark">
                     <TbBookmark />
                 </div>
-                <div className="delete">
+                <div className="delete" onClick={delHandle}>
                     <TbTrashX />
                 </div>
             </div>
