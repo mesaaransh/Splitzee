@@ -11,6 +11,14 @@ let userModel = new mongoose.Schema({
         required: true,
         unique: true
     },
+    gender:{
+        type: String,
+        required: true
+    },
+    profilePhoto:{
+        type: String,
+        required: true
+    },
     phone: {
         type: String,
         required: true
@@ -28,9 +36,7 @@ let userModel = new mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         defalut: [],
         ref: 'User'
-    }
-
-
+    },
 
 }, {
     timestamps: true

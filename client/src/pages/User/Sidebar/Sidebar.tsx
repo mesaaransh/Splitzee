@@ -11,8 +11,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function Sidebar({ userData, setActiveTrip, activeTrip }: any) {
 
-    console.log(userData);
-    
     let [display, setDisplay] = useState(false);
     let navigator = useNavigate();
 
@@ -36,7 +34,7 @@ export default function Sidebar({ userData, setActiveTrip, activeTrip }: any) {
 
     return (
         <>
-            <AddTrip display={display} setDisplay={setDisplay} trips={data} />
+            <AddTrip userData={userData} display={display} setDisplay={setDisplay} trips={data} />
             <div className="sidebar">
                 <div className="sidebarContainer">
                     <div className="sidebarProfile">
@@ -46,7 +44,9 @@ export default function Sidebar({ userData, setActiveTrip, activeTrip }: any) {
                             </h4>
                             <p>{userData.email}</p>
                         </div>
-                        <div className="sidebarProfilePic"></div>
+                        <div className="sidebarProfilePic">
+                            <img src={userData.profilePhoto} alt={userData.name} />
+                        </div>
                     </div>
 
                     <SidebarCategory name="Trips" setDisplay={setDisplay}>

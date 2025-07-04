@@ -50,8 +50,10 @@ export default function AddExpense({ display, setDisplay, trip }: any) {
         });
 
     }
-
+    
+    let [financer, setFinancer] = useState("");
     function finSelectHandle(e: any) {
+        setFinancer(e.target.innerHTML);
         setFormData({
             ...formData,
             financer: e.target.id
@@ -59,16 +61,38 @@ export default function AddExpense({ display, setDisplay, trip }: any) {
     }
 
 
+
     let expense = useMutation<void, Error, Transaction>({
         mutationKey: ['addExpenses'],
-        mutationFn: async (formData: Transaction) => (
-            await axios.post(config.apiURL + 'expense', { ...formData, trip: trip._id }, {
+        mutationFn: async (formData: Transaction) => {
+
+            await axios.post(`${config.apiURL}activity`, {
+                user: [formData.financer],
+                message: `You paid ₹${formData.amount} on the trip ${trip.name}.`
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'token': sessionStorage.getItem('token')
+                }
+            });
+
+            await axios.post(`${config.apiURL}activity`, {
+                user: [...formData.members],
+                message: `You owe ₹${(formData.amount/formData.members.length)} to ${financer} for the trip ${formData.description} on the trip ${trip.name}.`
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'token': sessionStorage.getItem('token')
+                }
+            });
+
+            return await axios.post(config.apiURL + 'expense', { ...formData, trip: trip._id }, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'token': sessionStorage.getItem('token')
                 }
             })
-        ),
+        },
         onSuccess: () => {
             window.alert('Expense Added!');
             setFormData(initalState);
@@ -92,7 +116,7 @@ export default function AddExpense({ display, setDisplay, trip }: any) {
             <div className="formContainer" style={{ display: display ? 'flex' : 'none' }}>
                 <div className="popupFrom">
                     <h2>Expense Details</h2>
-                    <p>{formData.trip}</p>
+                    <p>{trip.name}</p>
 
                     <form className="form" onSubmit={submitHandle}>
                         <div className="row">

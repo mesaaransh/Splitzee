@@ -7,6 +7,7 @@ const { verify } = require('./Controlers/verify')
 const { auth } = require('./Controlers/Middlewares/auth')
 const { addTrip, getTrips, deleteTrip, getTrip, addMember } = require('./Controlers/trip')
 const { addExpense, delExpense } = require('./Controlers/expense')
+const { addActivity, getActivities } = require('./Controlers/activity')
 
 const app = express()
 app.use(bodyParser.urlencoded({extended: true}))
@@ -33,6 +34,10 @@ app.post("/member", auth, addMember)
 
 app.post("/expense", auth, addExpense )
 app.delete("/expense/:id", auth, delExpense )
+
+
+app.get("/activity", auth, getActivities)
+app.post("/activity", auth, addActivity)
 
 
 app.listen(8000, ()=>{console.log("----------AppStarted-----------");})

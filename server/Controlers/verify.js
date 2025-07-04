@@ -1,17 +1,20 @@
 var jwt = require('jsonwebtoken');
 const { config } = require('../config');
+const user = require('../Models/user');
 
 async function verify(req, res) {
     try {
         let data = req.body
         let token = ""
         token = data.token
-
+        
         let isValid = false
         isValid = jwt.verify(token, config.jwtkey)
         if (isValid) {
-            res.status(200);
-            res.send(isValid);
+            await user.findById(isValid.id).select("-password -__v -createdAt -updatedAt").catch((err) => { throw ("User Not Found") }).then((user) => {
+                res.status(200);
+                res.send(user);
+            });
         }
         else {
             res.status(401);
@@ -19,7 +22,7 @@ async function verify(req, res) {
         }
     } catch (error) {
         res.status(400);
-        res.send("Cannot Authenticate Token")
+        res.send(error.message || "Invalid Token");
     }
 
 }

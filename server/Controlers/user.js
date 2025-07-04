@@ -17,8 +17,6 @@ async function verifyUser(req, res) {
                 let token = jwt.sign({
                     id: currUser._id,
                     email: currUser.email,
-                    phone: currUser.phone,
-                    name: currUser.name
                 },
                     config.jwtkey,
                     {
@@ -48,14 +46,13 @@ async function newUser(req, res) {
     try {
         let data = req.body;
         data.password = await bcrypt.hash(data.password, saltRounds).catch((err) => { throw (err) });
-
-
         isValid = validator.isEmail(data.email) && data.phone.length == 10;
 
         if (isValid) {
             let allusers = await user.find({ email: data.email })
             if (allusers.length == 0) {
                 let newUser = new user(data);
+                newUser.profilePhoto = `https://avatars.saaranshgupta.com/${newUser.gender}/${Math.floor(Math.random() * 10)}.jpg`
                 await newUser.save();
                 res.status(200)
                 res.send(newUser)

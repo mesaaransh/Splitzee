@@ -100,7 +100,8 @@
     margin-bottom: 10px;
 }
 
-.formControl > input{
+.formControl > input,
+.formControl > select{
     height: 50px;
     width: 100%;
     background-color: transparent;

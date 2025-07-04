@@ -1,28 +1,51 @@
+import { useQuery } from "@tanstack/react-query"
 import "./UserActivity.css"
+import axios from "axios";
+import config from "../../../../config";
+import type { Activity } from "../../../../schemas/activity";
 
 export default function UserActivity() {
+  const query = useQuery({
+    queryKey: ['activities'],
+    queryFn: async (): Promise<Activity[]> => {
+      const res = await axios.get(config.apiURL + 'activity', {
+        headers: {
+          token: sessionStorage.getItem('token') || ''
+        }
+      });
+      return res.data;
+    },
+  });
+
   return (
     <div className="userActivity">
-
-        <h3> Your Activity </h3>
-
-        <div className="activities">
-            <Activity type={'oweActivity'} name={'Abhay Bagla'} amount={'200'} reason={'Shimla Trip'} date={'20th October 2024'} />
-            <Activity type={'payActivity'} name={'Abhay Bagla, Gauransh Mehra'} amount={'200'} reason={'Party Night Dinner'} date={'1st December 2022'} />
-            <Activity type={'avainActivity'} name={'Chirag Bansal'} amount={'200'} reason={'After Exam Lunch'} date={'5th April 2025'} />
-        </div>
-
+      <h3>Your Activity</h3>
+      <div className="activities">
+        {
+          query.isLoading ? (
+            <p>Loading...</p>
+          ) : query.isError ? (
+            <p>Error loading activity!</p>
+          ) : (
+            query.data?.map((activity: Activity) => (
+              <Activity
+                key={activity._id}
+                message={activity.message}
+                date={activity.date}
+              />
+            ))
+          )
+        }
+      </div>
     </div>
-  )
+  );
 }
 
-
-function Activity({name, amount, reason, date, type}: any){
+function Activity({message, date}: any){
 
     return(
-        <div className={"activity " + type}>
-            <p>You owe {name} ${amount} for {reason}</p>
-            {/* <p> You paid Abhay Bagla, Gauransh Mehra, Chirag Bansal $200 for phalana dhimkana </p> */}
+        <div className={"activity"}>
+            <p>{message}</p>
             <p>{date}</p>
         </div>
     )

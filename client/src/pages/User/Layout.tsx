@@ -14,6 +14,8 @@ export default function Layout() {
   let [userData, setUserData] = useState<User>({
     name: '',
     email: '',
+    gender: '',
+    profilePhoto: '',
     phone: '',
     _id: '',
     friends: [],
@@ -41,6 +43,7 @@ export default function Layout() {
     }).then((resp: any) => {
       if (resp && resp.status == 200) {
         setAuth(true)
+        console.log(resp.data);
         setUserData(resp.data)
       }
       else {

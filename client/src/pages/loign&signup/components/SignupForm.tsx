@@ -13,7 +13,6 @@ export default function SignupForm() {
 
     let [error, setError] = useState("")
     let [disable, setDisable] = useState(true)
-    let [alert, setAlert] = useState("none");
     const navigator = useNavigate();
 
     function formInputHandler(event: any) {
@@ -69,28 +68,38 @@ export default function SignupForm() {
                 <div className="formRow">
                     <div className="formControl">
                         <label htmlFor="">Name</label>
-                        <input type="text" name="name" onInput={formInputHandler} required />
+                        <input type="text" name="name" onChange={formInputHandler} required />
+                    </div>
+                </div>
+
+                <div className="formRow">
+                    <div className="formControl">
+                        <label htmlFor="">Gender</label>
+                        <select name="gender" onChange={formInputHandler}>
+                            <option value="m">Male</option>
+                            <option value="f">Female</option>
+                        </select>
                     </div>
                 </div>
 
                 <div className="formRow">
                     <div className="formControl">
                         <label htmlFor="">Phone Number</label>
-                        <input type="number" pattern={"[0-9]{10}"} name="phone" onInput={formInputHandler} required />
+                        <input type="number" pattern={"[0-9]{10}"} name="phone" onChange={formInputHandler} required />
                     </div>
                 </div>
 
                 <div className="formRow">
                     <div className="formControl">
                         <label htmlFor="">Email</label>
-                        <input type="email" name="email" onInput={formInputHandler} required />
+                        <input type="email" name="email" onChange={formInputHandler} required />
                     </div>
                 </div>
 
                 <div className="formRow">
                     <div className="formControl">
                         <label htmlFor="">Password</label>
-                        <input type="password" name="password" onInput={formInputHandler} required />
+                        <input type="password" name="password" onChange={formInputHandler} required />
                     </div>
                 </div>
 

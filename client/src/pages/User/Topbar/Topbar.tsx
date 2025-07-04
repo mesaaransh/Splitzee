@@ -7,8 +7,8 @@ export default function Topbar() {
 
   return (
     <div className="topbar">
-        <div className="logo"></div>
-        <h3>Splitzee</h3>
+        {/* <div className="logo"></div> */}
+        <h2>Splitzee</h2>
 
         <div className="topbarMenu">
             <div className="topbarMenuButton" onClick={() => {navigator('./home')}}>Home</div>

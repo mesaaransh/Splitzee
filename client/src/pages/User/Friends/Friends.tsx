@@ -5,12 +5,12 @@ import config from "../../../config";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { User } from "../../../schemas/user";
 
-let token = sessionStorage.getItem('token')
 
 export default function Friends() {
-
+  
+  let token = sessionStorage.getItem('token')
   let {data, isLoading, error} = useQuery<User>({
-    queryKey: ['FriendReq'],
+    queryKey: ['FriendReq', token],
     queryFn: async () => (
       await axios.get(config.apiURL + 'friends', {
         headers: {
@@ -67,6 +67,7 @@ function Friend({ name, message, amount }: any) {
 
 function FriendReq({ name, email, id }: any) {
   
+  let token = sessionStorage.getItem('token')
   let[error, setError] = useState('')
   let query = useQueryClient();
 
@@ -113,6 +114,7 @@ function AddFriend() {
     setEmail(e.target.value);
   }
 
+  let token = sessionStorage.getItem('token')
   let request = useMutation({
     mutationKey: ['Req', email],
     mutationFn: async (email: string) => (

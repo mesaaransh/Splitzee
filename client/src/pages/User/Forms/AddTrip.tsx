@@ -8,6 +8,7 @@ import "./Froms.css"
 export default function AddTrip({ display, setDisplay }: any) {
 
     let [formData, setFormData] = useState({})
+
     const queryClient = useQueryClient()
 
     function closeHandle() {
@@ -23,17 +24,30 @@ export default function AddTrip({ display, setDisplay }: any) {
 
     const trip = useMutation({
         mutationKey: ['addTrip'],
-        mutationFn: (formData: any) => (
-            axios.post(config.apiURL + 'trip', formData, {
+        mutationFn: async (formData: any) => {
+            await axios.post(config.apiURL + 'activity', {
+                message: "Added a new trip " + formData.name,
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'token': sessionStorage.getItem('token')
+                }
+            })
+
+            return axios.post(config.apiURL + 'trip', formData, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'token': sessionStorage.getItem('token')
                 }
             }).then((data) => (data.data))
-        ),
+
+        },
         onSuccess: async () => {
             setDisplay(false);
             queryClient.invalidateQueries({ queryKey: ['Trips'] })
+        },
+        onError: (error: any) => {
+            console.error("Error adding trip:", error);
         }
     })
 
@@ -48,27 +62,27 @@ export default function AddTrip({ display, setDisplay }: any) {
             <div className="formContainer" style={{ display: display ? 'flex' : 'none' }}>
                 <div className="popupFrom">
                     <h2>Trip Details</h2>
-                    
-                    {
-                        trip.isPending?
-                        <></>
-                        :
-                        <form className="form" onSubmit={submitHandler}>
-                            <div className="row">
-                                <div className="col">
-                                    <label htmlFor="name">Name</label>
-                                    <input type="text" name="name" id="name" required onChange={inputHandler} />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col">
-                                    <label htmlFor="date">Start Date</label>
-                                    <input type="date" name="startDate" id="date" required onChange={inputHandler} />
-                                </div>
-                            </div>
 
-                            <button type="submit">Add Trip</button>
-                        </form>
+                    {
+                        trip.isPending ?
+                            <></>
+                            :
+                            <form className="form" onSubmit={submitHandler}>
+                                <div className="row">
+                                    <div className="col">
+                                        <label htmlFor="name">Name</label>
+                                        <input type="text" name="name" id="name" required onChange={inputHandler} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col">
+                                        <label htmlFor="date">Start Date</label>
+                                        <input type="date" name="startDate" id="date" required onChange={inputHandler} />
+                                    </div>
+                                </div>
+
+                                <button type="submit">Add Trip</button>
+                            </form>
                     }
 
                     <div className="closeButton" onClick={closeHandle}>
