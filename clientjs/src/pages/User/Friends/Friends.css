@@ -1,0 +1,96 @@
+.userFriends{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.userFriendsTag{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.userFriend{
+    background-color: var(--sec1);
+    border: 1px solid var(--sec3);
+    border-radius: 20px;
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+}
+
+.userFriendImage{
+    height: 40px;
+    aspect-ratio: 1;
+    background-color: teal;
+    border-radius: 100px;
+    margin-right: 20px;
+}
+
+.userFriend > h3:nth-of-type(2){
+    margin-left: auto;
+    font-style: italic;
+}
+
+.userFriend > .buttons{
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
+.userFriend > .buttons > button{
+    padding: 8px 20px;
+    border: 0px solid;
+    border-radius: 8px;
+
+    font-weight: 500;
+}
+
+
+.userFriend > .buttons > button.accept{
+    background-color: var(--greena);
+    color: var(--green1);
+}
+
+.userFriend > .buttons > button.reject{
+    background-color: var(--reda);
+    color: var(--red1);
+}
+
+
+
+.addFriends{
+    display: flex;
+    flex-direction: column;
+}
+
+.addFriends > form{
+    margin: 10px 0;
+}
+
+.addFriends > form > input{
+    background-color: var(--sec1);
+    border: 1px solid var(--dark1);
+    border-radius: 5px;
+    outline: 0px solid;
+    
+    height: 35px;
+    width: 400px;
+    
+    padding: 10px 10px;
+    margin-right: 20px;
+}
+
+.addFriends > form > button{
+    
+    height: 35px;
+    padding: 0 20px;
+    border: 0px solid;
+    border-radius: 5px;
+    
+    background-color: var(--green1);
+    color: var(--sec1);
+}
+.vaah{
+    font-family: 600;
+    color: var(--green1);
+}

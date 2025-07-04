@@ -1,0 +1,51 @@
+.userActivity{
+    background-color: var(--sec1);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid hsl(0, 0%, 85%);
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.userActivity > .activities{
+    width: 100%;
+    flex-grow: 1;
+}
+
+.activities > .activity{
+    color: var(--sec1);
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 7px;
+    flex-grow: 1;
+    margin-top: 10px;
+
+    gap: 20px;
+}
+
+.activity > p{
+    font-size: 0.9em;
+}
+
+.activity > p:nth-of-type(2){
+
+    width: 180px;  
+    text-align: right;
+    margin-left: auto;
+
+}
+
+.oweActivity{
+    background-color: var(--red1);
+}
+
+.payActivity{
+    background-color: var(--blue1);
+}
+
+.avainActivity{
+    background-color: var(--yellow2);
+}
