@@ -1,18 +1,29 @@
 import axios from "axios";
+import config from "../../config";
 
 async function authenticator() {
 
-    let token = sessionStorage.getItem('token') || '';
+    try{
+        let token = sessionStorage.getItem('token') || '';
+        let data = await axios.post(config.apiURL + 'verify', { token }, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).catch((err) => {
+            return err;
+        })
 
-    let data = await axios.post(config.apiURL + 'verify', { token }, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+        if(data.status !== 200) {
+            sessionStorage.removeItem('token');
+            return false;
         }
-    }).catch((err) => {
-        console.log(err);
-    })
 
-    return data.data;
+        return true;
+    }
+    catch(err) {
+        sessionStorage.removeItem('token');
+        return false;
+    }
 
 }
 

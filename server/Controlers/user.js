@@ -9,9 +9,10 @@ async function verifyUser(req, res) {
 
     try {
         let data = req.body
-        let currUser = await user.findOne({ email: data.email })
+        let currUser = await user.findOne({email: data.email}, 'name phone password email _id profilePhoto friends requests').populate('friends', 'name phone email').populate('requests', 'name phone email');
 
         if (currUser) {
+            console.log(currUser._doc);
             let isValid = await bcrypt.compare(data.password, currUser.password).catch((err) => { throw ("Email or Password not valid") });
             if (isValid) {
                 let token = jwt.sign({
@@ -24,7 +25,12 @@ async function verifyUser(req, res) {
                     }
                 )
                 res.status(200);
-                res.send(token)
+                res.send({
+                    token: token,
+                    userData: {
+                    ...currUser._doc,
+                    password: undefined,
+                }});
             }
             else{
                 throw ("Email or Password not valid")

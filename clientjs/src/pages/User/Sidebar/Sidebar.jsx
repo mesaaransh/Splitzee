@@ -1,40 +1,32 @@
 import "./Sidebar.css"
-import axios from "axios";
-import { useState } from "react";
 import dateFormat from "dateformat";
-import config from "../../../config";
 import AddTrip from "../Forms/AddTrip";
 import { TbPlus } from "react-icons/tb";
 import { TbTrashX } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import tripFetcher from "./tripFetcher";
 
-export default function Sidebar({ userData, setActiveTrip, activeTrip }) {
+export default function Sidebar() {
 
-    let [display, setDisplay] = useState(false);
+    let userData = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')) : {};
     let navigator = useNavigate();
-
-    const { data, isLoading, isFetching } = useQuery({
-        queryKey: ['Trips'],
-        queryFn: async () => {
-            const res = await axios.get(config.apiURL + 'trip', {
-                headers: {
-                    'token': sessionStorage.getItem('token'),
-                },
-            });
-            return res.data;
-        },
-    })
 
     function logouthandle() {
         sessionStorage.removeItem('token');
-        localStorage.removeItem('token')
-        navigator('/login')
+        sessionStorage.removeItem('userData');
+        navigator('/login');
     }
+
+    let trips = useQuery({
+        queryKey: ['trips'],
+        queryFn: tripFetcher,
+        refetchOnWindowFocus: false,
+    })
 
     return (
         <>
-            <AddTrip userData={userData} display={display} setDisplay={setDisplay} trips={data} />
+            <AddTrip />
             <div className="sidebar">
                 <div className="sidebarContainer">
                     <div className="sidebarProfile">
@@ -49,14 +41,14 @@ export default function Sidebar({ userData, setActiveTrip, activeTrip }) {
                         </div>
                     </div>
 
-                    <SidebarCategory name="Trips" setDisplay={setDisplay}>
+                    <SidebarCategory name="Trips">
                         {
-                            isFetching || isLoading ?
+                            trips.isFetching || trips.isLoading ?
                                 <>Fetching details...</>
                                 :
-                                data.length?
-                                data?.map((trip) => (
-                                    <CategoryItem setActiveTrip={setActiveTrip} active={activeTrip} key={trip._id} trip={trip} userId={userData.id}/>
+                                trips.data.length?
+                                trips?.data.map((trip) => (
+                                    <CategoryItem key={trip._id} trip={trip} />
                                 ))
                                 :
                                 <>No Trips Yet!</>
@@ -92,13 +84,13 @@ export default function Sidebar({ userData, setActiveTrip, activeTrip }) {
 
 
 
-function SidebarCategory({ name, setDisplay, children }) {
+function SidebarCategory({ name, children }) {
 
     return (
         <div className="sidebarCategory">
             <div className="sidebarCategoryTitle">
                 <h2>{name}</h2>
-                <div className="addButton" onClick={() => { setDisplay(true) }} ><TbPlus /></div>
+                <div className="addButton" ><TbPlus /></div>
             </div>
 
             <div className="sidebarCategoryItems">
@@ -109,51 +101,23 @@ function SidebarCategory({ name, setDisplay, children }) {
 
 }
 
-function CategoryItem({ trip: { name, startDate: date, _id: id, owner }, userId, active, setActiveTrip }) {
+function CategoryItem({trip}) {
 
-    const navigator = useNavigate();
-    const queryClient = useQueryClient();
 
-    function clickHandler(){
-        queryClient.invalidateQueries({queryKey: ['transactions']})
-        setActiveTrip(id);
-        navigator('./trip/' + id)
-    }
-
-    let delTrip = useMutation({
-
-        mutationKey: ['DelTrip', id],
-        mutationFn: () => (
-            axios.delete(config.apiURL + 'trip/' + id, {
-                headers: {
-                    'token': sessionStorage.getItem('token')
-                }
-            })
-        ),
-        onSuccess: () => {
-            window.alert('Trip Deleted')
-            navigator('/user')
-            queryClient.invalidateQueries({queryKey: ['Trips']})
-        }
-
-    })
-
-    async function deleteHandle() {
-        delTrip.mutate();
-    }
+    let userData = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')) : {};
 
     return (
-        <div className={id==active?"sidebarCategoryItem activeSidebarItem":"sidebarCategoryItem"} onClick={clickHandler}>
+        <div className="sidebarCategoryItem">
 
             <div className="sidebarCategoryItemIcon"> </div>
 
             <div>
-                <h4>{name}</h4>
-                <h5>{dateFormat(date, "dS mmmm yyyy")}</h5>
+                <h4>{trip.name}</h4>
+                <h5>{dateFormat(trip.date, "dS mmmm yyyy")}</h5>
             </div>
 
-            <div className="sidebarCategoryItemDeleteIcon" onClick={deleteHandle}>
-                {owner === userId? <TbTrashX /> : <></>}
+            <div className="sidebarCategoryItemDeleteIcon">
+                {trip.owner === userData._id ? <TbTrashX /> : <></>}
             </div>
 
         </div>

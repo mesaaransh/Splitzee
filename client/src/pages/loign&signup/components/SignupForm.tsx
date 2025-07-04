@@ -3,7 +3,6 @@ import { useState } from "react"
 import config from "../../../config";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import waiter from "../../../waiter";
 
 export default function SignupForm() {
 
@@ -35,7 +34,6 @@ export default function SignupForm() {
             }).then((data) => (data.data)),
         onSuccess: async () => {
             window.alert('Login Successful')
-            await waiter(1000);
             navigator('/login');
         },
         onError: (err)=>{

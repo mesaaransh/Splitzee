@@ -25,8 +25,8 @@ export default function LoginForm() {
                 }
             }).then((data) => (data.data)),
         onSuccess: (resp) => {
-            console.log(resp);
-            sessionStorage.setItem('token', resp)
+            sessionStorage.setItem('token', resp.token);
+            sessionStorage.setItem('userData', JSON.stringify(resp.userData));
             navigator('/user/home', { replace: true })
         },
         onError: (err)=>{

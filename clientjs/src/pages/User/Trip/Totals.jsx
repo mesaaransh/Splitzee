@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
 import generateDebtMatrix from "./functions/debtMatrix";
-import { DebtMatrix } from "../../../schemas/debtMatrix";
 
-export default function Totals({ display, setDisplay, trip }: any) {
+export default function Totals({ display, setDisplay, trip }) {
 
     function closeHandle() { setDisplay(false) }
-    let [matrix, setMatrix] = useState<DebtMatrix>();
+    let [matrix, setMatrix] = useState();
 
     useEffect(() => {
         console.log(generateDebtMatrix(trip))
