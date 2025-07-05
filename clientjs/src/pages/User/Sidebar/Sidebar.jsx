@@ -1,6 +1,5 @@
 import "./Sidebar.css"
 import dateFormat from "dateformat";
-import AddTrip from "../Forms/AddTrip";
 import { TbPlus } from "react-icons/tb";
 import { TbTrashX } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
@@ -26,9 +25,9 @@ export default function Sidebar() {
 
     return (
         <>
-            <AddTrip />
             <div className="sidebar">
                 <div className="sidebarContainer">
+                
                     <div className="sidebarProfile">
                         <div>
                             <h4>
@@ -48,7 +47,9 @@ export default function Sidebar() {
                                 :
                                 trips.data.length?
                                 trips?.data.map((trip) => (
+                                    <>
                                     <CategoryItem key={trip._id} trip={trip} />
+                                    </>
                                 ))
                                 :
                                 <>No Trips Yet!</>
@@ -103,11 +104,11 @@ function SidebarCategory({ name, children }) {
 
 function CategoryItem({trip}) {
 
-
+    let navigator = useNavigate();
     let userData = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')) : {};
 
     return (
-        <div className="sidebarCategoryItem">
+        <div className="sidebarCategoryItem" onClick={() => navigator('./trip/' + trip._id)}>
 
             <div className="sidebarCategoryItemIcon"> </div>
 
@@ -117,7 +118,7 @@ function CategoryItem({trip}) {
             </div>
 
             <div className="sidebarCategoryItemDeleteIcon">
-                {trip.owner === userData._id ? <TbTrashX /> : <></>}
+                <h2>{trip.owner === userData._id ? <TbTrashX /> : <></>}</h2>
             </div>
 
         </div>

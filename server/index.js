@@ -10,8 +10,9 @@ const { addExpense, delExpense } = require('./Controlers/expense')
 const { addActivity, getActivities } = require('./Controlers/activity')
 
 const app = express()
-app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 connector();
 
 

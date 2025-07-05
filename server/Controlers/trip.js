@@ -2,12 +2,12 @@ const trip = require("../Models/trip");
 const user = require("../Models/user");
 
 
-async function getTrips(req, res){
+async function getTrips(req, res) {
 
     let tokenData = req.tokenData
 
     try {
-        let trips = await trip.find({members: {$in: [tokenData.id]}}, 'name startDate owner');
+        let trips = await trip.find({ members: { $in: [tokenData.id] } }, 'name startDate owner');
         res.status(200);
         res.send(trips);
 
@@ -18,29 +18,38 @@ async function getTrips(req, res){
 
 }
 
-async function getTrip(req, res){
+async function getTrip(req, res) {
 
-    try{
+    try {
         let id = req.params.id;
         let tokenData = req.tokenData;
 
         let currTrip = await trip.findById(id);
 
-        if(currTrip){
-            if(currTrip.members.includes(tokenData.id)){
-                currTrip = await trip.findById(id).populate('members', 'name email phone').populate('transactions');
+        if (currTrip) {
+            if (currTrip.members.includes(tokenData.id)) {
+                const currTrip = await trip.findById(id)
+                    .populate('members', 'name email phone')
+                    .populate({
+                        path: 'transactions',
+                        populate: [
+                            { path: 'financer', select: 'name email' },
+                            { path: 'members', select: 'name email' }
+                        ],
+                        sort: { date: -1 }
+                    });
                 res.status(200);
                 res.send(currTrip);
             }
-            else{
-                throw("Pair chadar mein rakho")
+            else {
+                throw ("Pair chadar mein rakho")
             }
         }
-        else{
-            throw("Trip not Found")
-        }    
+        else {
+            throw ("Trip not Found")
+        }
     }
-    catch(err){
+    catch (err) {
         res.status(400);
         console.log(err);
         res.send(err)
@@ -48,14 +57,14 @@ async function getTrip(req, res){
 
 }
 
-async function addTrip(req, res){
+async function addTrip(req, res) {
 
     try {
 
         let data = req.body;
         let tokenData = req.tokenData
 
-        if(data){
+        if (data) {
             let newTrip = new trip(data);
             newTrip.members.push(tokenData.id);
             newTrip.owner = tokenData.id;
@@ -64,13 +73,13 @@ async function addTrip(req, res){
             res.status(200);
             res.send(newTrip)
         }
-        else{
-            throw("Data not found")
+        else {
+            throw ("Data not found")
         }
 
-        
+
     } catch (error) {
-        
+
         res.status(400);
         res.send(error)
 
@@ -78,11 +87,11 @@ async function addTrip(req, res){
 
 }
 
-async function addMember(req, res){
+async function addMember(req, res) {
 
     try {
-        
-        let {friendId, tripId} = req.body;
+
+        let { friendId, tripId } = req.body;
         let tokenData = req.tokenData;
 
         let currUser = await user.findById(tokenData.id);
@@ -90,8 +99,8 @@ async function addMember(req, res){
 
         let isValid = currUser.friends.includes(friendId) && currTrip.members.includes(tokenData.id);
 
-        if(isValid){
-            if(!currTrip.members.includes(friendId)){
+        if (isValid) {
+            if (!currTrip.members.includes(friendId)) {
                 currTrip.members.push(friendId)
                 await currTrip.save();
 
@@ -99,12 +108,12 @@ async function addMember(req, res){
                 res.status(200);
                 res.send(tripData);
             }
-            else{
-                throw("User exists in trip")
+            else {
+                throw ("User exists in trip")
             }
         }
-        else{
-            throw("Invalid Authorization")
+        else {
+            throw ("Invalid Authorization")
         }
 
 
@@ -115,32 +124,32 @@ async function addMember(req, res){
 
 }
 
-async function deleteTrip(req, res){
+async function deleteTrip(req, res) {
 
-    try{
+    try {
         let tripId = req.params.id;
         let currTrip = await trip.findById(tripId);
         let tokenData = req.tokenData;
-    
-        if(currTrip.owner == tokenData.id){
+
+        if (currTrip.owner == tokenData.id) {
             await trip.findByIdAndDelete(tripId)
             res.status(200);
             res.send({})
         }
-        else if(currTrip.members.include(tokenData.id)){
+        else if (currTrip.members.include(tokenData.id)) {
             currTrip.members.splice(currTrip.members.indexOf(tokenData.id), 1);
             currTrip.save();
         }
-        else{
+        else {
             res.status(401);
             res.send("zyada chod mein?")
         }
     }
-    catch(err){
+    catch (err) {
         res.status(400);
         res.send(err)
     }
 
 }
 
-module.exports = {getTrips, getTrip, addTrip, addMember, deleteTrip}
+module.exports = { getTrips, getTrip, addTrip, addMember, deleteTrip }

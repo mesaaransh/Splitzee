@@ -1,9 +1,13 @@
 import { TbArrowBigUpLine, TbPlus, TbCash, TbUsersPlus } from "react-icons/tb";
+import AddExpense from "./actions/AddExpense";
+import { useRef } from "react";
 
 export function TripCu() {
 
+    let expenseRef = useRef();
+
     return (
-        <>
+        <>  
             <div className="tripcu">
 
                 <div className="tripInfo">
@@ -38,9 +42,10 @@ export function TripCu() {
                         Export trip
                     </div>
 
-                    <div className="tripAction actionblue">
+                    <AddExpense ref={expenseRef}/>
+                    <div className="tripAction actionblue" onClick={() => {expenseRef.current?.open()}}>
                         <div className="tripButton"><TbPlus /></div>
-                        Add an expense
+                        Add expense
                     </div>
 
                     <div className="tripAction actionred">
@@ -50,7 +55,7 @@ export function TripCu() {
 
                     <div className="tripAction actiongreen">
                         <div className="tripButton"><TbUsersPlus /></div>
-                        Invite a friend
+                        Invite friends
                     </div>
 
                 </div>

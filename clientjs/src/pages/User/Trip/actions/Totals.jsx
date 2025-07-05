@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
-import generateDebtMatrix from "./functions/debtMatrix";
+import generateDebtMatrix from "../functions/debtMatrix";
 
 export default function Totals({ display, setDisplay, trip }) {
 
