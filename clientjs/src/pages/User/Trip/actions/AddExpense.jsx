@@ -3,6 +3,7 @@ import tripFetcher from "../tripFetcher";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import addExpense from "./expenseAdder";
+import dateFormat from 'dateformat';
 
 import { FaXmark } from "react-icons/fa6";
 
@@ -16,7 +17,6 @@ const AddExpense = forwardRef((props, ref) => {
         close: () => setOpen(false)
     }));
 
-    
     const { id } = useParams()
     let trip = useQuery({
         queryKey: ['trip', id],
@@ -24,6 +24,7 @@ const AddExpense = forwardRef((props, ref) => {
         refetchOnWindowFocus: false,
     })
     
+    const [date, setDate] = useState();
     let [financer, setFinancer] = useState(null);
     let [members, setMembers] = useState([]);
     
@@ -107,7 +108,7 @@ const AddExpense = forwardRef((props, ref) => {
             <form onSubmit={submitHandle}>
                 <div>
                     <h2>Add Expense</h2>
-                    <p>TripName</p>
+                    <p>{trip.data.name} - {dateFormat(trip.data.startDate, 'dd mmmm yyyy')}</p>
                 </div>
                 <div className="closeForm">
                     <FaXmark onClick={closeForm} />
@@ -122,7 +123,7 @@ const AddExpense = forwardRef((props, ref) => {
                 </div>
                 <div className="formGroup">
                     <label htmlFor="date">Date</label>
-                    <input type="date" id="date" name="date" required />
+                    <input type="date" id="date" name="date" value={date} onChange={(e) => setDate(e.target.value)} required />
                 </div>
 
                 <div className="formGroup">

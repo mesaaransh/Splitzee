@@ -5,6 +5,9 @@ import { TbTrashX } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import tripFetcher from "./tripFetcher";
+import { MdOutlineAirplaneTicket } from "react-icons/md";
+import AddTrip from "./AddTrip";
+import { useRef } from "react";
 
 export default function Sidebar() {
 
@@ -25,6 +28,7 @@ export default function Sidebar() {
 
     return (
         <>
+            
             <div className="sidebar">
                 <div className="sidebarContainer">
                 
@@ -87,11 +91,14 @@ export default function Sidebar() {
 
 function SidebarCategory({ name, children }) {
 
+    let tripRef = useRef();
+
     return (
         <div className="sidebarCategory">
+            <AddTrip ref={tripRef}/>
             <div className="sidebarCategoryTitle">
                 <h2>{name}</h2>
-                <div className="addButton" ><TbPlus /></div>
+                <div className="addButton" onClick={() => tripRef.current?.open()}><TbPlus /></div>
             </div>
 
             <div className="sidebarCategoryItems">
@@ -110,7 +117,9 @@ function CategoryItem({trip}) {
     return (
         <div className="sidebarCategoryItem" onClick={() => navigator('./trip/' + trip._id)}>
 
-            <div className="sidebarCategoryItemIcon"> </div>
+            <div className="sidebarCategoryItemIcon">
+                <MdOutlineAirplaneTicket/>
+            </div>
 
             <div>
                 <h4>{trip.name}</h4>

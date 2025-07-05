@@ -110,12 +110,20 @@
 
 .sidebarCategoryItemIcon{
 
+    position: relative;
     height: 45px;
     aspect-ratio: 1;
     border-radius: 8px;
-    background-color: rgb(98, 95, 255);
+    background-color: var(--bluea);
+    color: var(--blue1);
     margin-right: 20px;
     box-shadow: 0px 3px 2px 0px hsla(0, 0%, 64%, 0.3);
+
+    font-size: 2rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
 }
 

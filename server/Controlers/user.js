@@ -9,10 +9,9 @@ async function verifyUser(req, res) {
 
     try {
         let data = req.body
-        let currUser = await user.findOne({email: data.email}, 'name phone password email _id profilePhoto friends requests').populate('friends', 'name phone email').populate('requests', 'name phone email');
+        let currUser = await user.findOne({email: data.email}, 'name phone password email _id profilePhoto friends requests').populate('friends', 'name phone email profilePhoto').populate('requests', 'name phone email profilePhoto');
 
         if (currUser) {
-            console.log(currUser._doc);
             let isValid = await bcrypt.compare(data.password, currUser.password).catch((err) => { throw ("Email or Password not valid") });
             if (isValid) {
                 let token = jwt.sign({
@@ -115,7 +114,7 @@ async function addRequest(req, res){
                 friend.requests.push(friends._id);
                 friend.save();
                 res.status(200)
-                res.send("adsf")
+                res.send("Request Sent Successfully");
             }
             else{
                 throw("Friend/Request Exists")

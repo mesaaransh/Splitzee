@@ -89,7 +89,7 @@ a:hover{
 
   position: relative;
   width: 40%;
-  max-height: 100vh;
+  max-height: 95vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

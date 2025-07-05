@@ -81,6 +81,7 @@ function TripTransaction({ data }) {
 
     let {id} = useParams();
     const { icon: Icon, color, bgColor } = getCategoryForDescription(data.description);
+    let userData = JSON.parse(sessionStorage.getItem("userData"));
     let query = useQueryClient();
 
     let deleter = useMutation({
@@ -105,16 +106,21 @@ function TripTransaction({ data }) {
     return (
 
         <div className="tripTransaction">
+
             <div className="tripTransactionIcon" style={{ backgroundColor: bgColor, color: color }}>
                 <Icon />
             </div>
-            <div>
+            <div className="tripTransactionInfo">
                 <h3>{data.description}</h3>
                 <p className="tripTransactionDate">Paid By: {data.financer.name}</p>
                 <p className="tripTransactionDate">Shared By: {data.members.map((member) => (member.name + ", "))}</p>
             </div>
+            
+            <div className="tripTransactionAmount">
+                <h3>${data.amount}</h3>
+                <p>Your Share: </p>
+            </div>
 
-            <h3 className="tripTransactionAmount">${data.amount}</h3>
             <div className="tripTransactionIcons">
                 <div className="bookmark">
                     <TbBookmark />

@@ -11,10 +11,9 @@ async function verify(req, res) {
         let isValid = false
         isValid = jwt.verify(token, config.jwtkey)
         if (isValid) {
-            await user.findById(isValid.id).select("-password -__v -createdAt -updatedAt").catch((err) => { throw ("User Not Found") }).then((user) => {
-                res.status(200);
-                res.send(user);
-            });
+            let currUser = await user.findById(isValid.id).select("-password -__v -createdAt -updatedAt");
+            res.status(200);
+            res.send(currUser);
         }
         else {
             res.status(401);

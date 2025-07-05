@@ -5,11 +5,8 @@ async function authenticator() {
 
     try{
         let token = sessionStorage.getItem('token') || '';
-        let data = await axios.post(config.apiURL + 'verify', { token }, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }).catch((err) => {
+        let data = await axios.post(config.apiURL + 'verify', { token })
+        .catch((err) => {
             return err;
         })
 

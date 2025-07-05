@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import "./UserActivity.css"
 import axios from "axios";
 import config from "../../../../config";
+import dateFormat from "dateformat";
 
 export default function UserActivity() {
   const query = useQuery({
@@ -45,7 +46,7 @@ function Activity({message, date}){
     return(
         <div className={"activity"}>
             <p>{message}</p>
-            <p>{date}</p>
+            <p>{dateFormat(date, 'dd mmmm yyyy')}</p>
         </div>
     )
 

@@ -15,6 +15,7 @@
 }
 
 .activities > .activity{
+    background-color: var(--blue2);
     color: var(--sec1);
     display: flex;
     align-items: center;
@@ -36,16 +37,4 @@
     text-align: right;
     margin-left: auto;
 
-}
-
-.oweActivity{
-    background-color: var(--red1);
-}
-
-.payActivity{
-    background-color: var(--blue1);
-}
-
-.avainActivity{
-    background-color: var(--yellow2);
 }
