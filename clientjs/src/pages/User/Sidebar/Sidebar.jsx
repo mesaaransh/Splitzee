@@ -2,12 +2,14 @@ import "./Sidebar.css"
 import dateFormat from "dateformat";
 import { TbPlus } from "react-icons/tb";
 import { TbTrashX } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import tripFetcher from "./tripFetcher";
 import { MdOutlineAirplaneTicket } from "react-icons/md";
 import AddTrip from "./AddTrip";
 import { useRef } from "react";
+import tripDeleter from "./tripDeleter"
+import { LuTicketsPlane } from "react-icons/lu";
 
 export default function Sidebar() {
 
@@ -28,10 +30,10 @@ export default function Sidebar() {
 
     return (
         <>
-            
+
             <div className="sidebar">
                 <div className="sidebarContainer">
-                
+
                     <div className="sidebarProfile">
                         <div>
                             <h4>
@@ -49,14 +51,14 @@ export default function Sidebar() {
                             trips.isFetching || trips.isLoading ?
                                 <>Fetching details...</>
                                 :
-                                trips.data.length?
-                                trips?.data.map((trip) => (
-                                    <>
-                                    <CategoryItem key={trip._id} trip={trip} />
-                                    </>
-                                ))
-                                :
-                                <>No Trips Yet!</>
+                                trips.data.length ?
+                                    trips?.data.map((trip) => (
+                                        <>
+                                            <CategoryItem key={trip._id} trip={trip} />
+                                        </>
+                                    ))
+                                    :
+                                    <>No Trips Yet!</>
                         }
                     </SidebarCategory>
 
@@ -95,7 +97,7 @@ function SidebarCategory({ name, children }) {
 
     return (
         <div className="sidebarCategory">
-            <AddTrip ref={tripRef}/>
+            <AddTrip ref={tripRef} />
             <div className="sidebarCategoryTitle">
                 <h2>{name}</h2>
                 <div className="addButton" onClick={() => tripRef.current?.open()}><TbPlus /></div>
@@ -109,25 +111,51 @@ function SidebarCategory({ name, children }) {
 
 }
 
-function CategoryItem({trip}) {
+function CategoryItem({ trip }) {
+
+    let {id} = useParams()
 
     let navigator = useNavigate();
     let userData = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')) : {};
+    let query = useQueryClient()
+
+
+    let deleter = useMutation({
+
+        mutationFn: (d) => tripDeleter(d),
+        onSuccess: () => {
+            query.invalidateQueries(['trip', trip._id]);
+            navigator('/user/home')
+            alert(`Deletion of ${trip.name} successfull`);
+        },
+        onError: () => {
+            alert('There was a problem deleting')
+        }
+
+    })
+
+    function delHandle() {
+        deleter.mutate(trip._id)
+    }
 
     return (
-        <div className="sidebarCategoryItem" onClick={() => navigator('./trip/' + trip._id)}>
+        <div className={`sidebarCategoryItem ${id == trip._id?"activeSidebarItem":""}`} onClick={() => navigator('./trip/' + trip._id)}>
 
             <div className="sidebarCategoryItemIcon">
-                <MdOutlineAirplaneTicket/>
+                <LuTicketsPlane />
             </div>
 
             <div>
                 <h4>{trip.name}</h4>
-                <h5>{dateFormat(trip.date, "dS mmmm yyyy")}</h5>
+                <h5>{dateFormat(trip.startDate, "dS mmmm yyyy")}</h5>
             </div>
 
             <div className="sidebarCategoryItemDeleteIcon">
-                <h2>{trip.owner === userData._id ? <TbTrashX /> : <></>}</h2>
+                {
+                    trip.owner === userData._id
+                        ? <h2 onClick={delHandle}> <TbTrashX /> </h2>
+                        : <></>
+                }
             </div>
 
         </div>

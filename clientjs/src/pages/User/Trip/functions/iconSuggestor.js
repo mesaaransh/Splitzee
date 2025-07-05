@@ -1,12 +1,11 @@
 import {
     FaUtensils,
-    FaPlane,
     FaShoppingCart,
     FaFilm,
     FaDog,
     FaBook,
 } from 'react-icons/fa';
-import { FaMoneyCheckDollar, FaHouseChimney } from 'react-icons/fa6';
+import { FaMoneyCheckDollar, FaHouseChimney, FaPlaneDeparture } from 'react-icons/fa6';
 import { LuPartyPopper } from "react-icons/lu";
 
 const categoryMap = {
@@ -18,7 +17,7 @@ const categoryMap = {
     },
     travel: {
         keywords: ['travel', 'trip', 'flight', 'uber', 'airport'],
-        icon: FaPlane,
+        icon: FaPlaneDeparture,
         color: 'var(--blue1)',      // blue
         bgColor: 'var(--bluea)'
     },

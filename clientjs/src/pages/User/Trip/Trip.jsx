@@ -84,6 +84,8 @@ function TripTransaction({ data }) {
     let userData = JSON.parse(sessionStorage.getItem("userData"));
     let query = useQueryClient();
 
+    const isPresent = data.members.some((m) => m._id === userData._id);
+
     let deleter = useMutation({
         mutationFn: (id) => expenseDeleter(id),
         onSuccess: () => {
@@ -118,7 +120,7 @@ function TripTransaction({ data }) {
             
             <div className="tripTransactionAmount">
                 <h3>${data.amount}</h3>
-                <p>Your Share: </p>
+                <p>Your Share: ${isPresent?Math.round((data.amount/data.members.length)*100)/100:'0'}</p>
             </div>
 
             <div className="tripTransactionIcons">
