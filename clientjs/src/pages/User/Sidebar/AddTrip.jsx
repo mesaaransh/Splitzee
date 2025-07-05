@@ -37,7 +37,7 @@ const AddTrip = forwardRef((props, ref) => {
 
         let trip = {
             name: formData.get('name'),
-            date: formData.get('date')
+            startDate: formData.get('date')
         }
 
         adder.mutate(trip)
