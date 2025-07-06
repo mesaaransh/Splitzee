@@ -1,38 +1,40 @@
 import { TbArrowBigUpLine, TbPlus, TbCash, TbUsersPlus } from "react-icons/tb";
-import AddExpense from "./actions/AddExpense";
-import { useRef } from "react";
+import AddExpense from "./actions/Expense/AddExpense";
+import { useEffect, useRef, useState } from "react";
+import AddFriend from "./actions/Friends/AddFriend";
+import userTotals from "./functions/userTotals";
 
-export function TripCu() {
+export function TripCu({trip}) {
 
     let expenseRef = useRef();
+    let friendRef = useRef();
+
+    let [totals, setTotals] = useState(userTotals(trip))
+
+    useEffect(() => {
+        setTotals(userTotals(trip));
+    }, [trip])
 
     return (
         <>  
             <div className="tripcu">
 
                 <div className="tripInfo">
-                    <table className="tripInfoTable">
-                        <thead>
-                            <td></td>
-                            <td>Owed</td>
-                            <td>Lent</td>
-                            <td>Total</td>
-                        </thead>
+                    <h3>Trip Totals</h3>
 
-                        {/* {
-                            flows.map((m) => (
-                                <tr>
-                                    <td>{formatName(m.name)}</td>
-                                    <td className="inflow data">{m.inflow}</td>
-                                    <td className="outflow data">{m.outflow}</td>
-                                    {
-                                        <td className={m.outflow - m.inflow < 0?'inflow data':'outflow data'}>{m.outflow - m.inflow}</td>
-                                    }
-                                </tr>
+                    <div className="tripInfoTotal">
+                        {
+                            totals.map((member) => (
+                                <div className="friend">
+                                    <p>{member.name}</p>
+                                    <p className={member.total<0?'inflow':'outflow'}>
+                                        ${member.total}
+                                    </p>
+                                </div>
                             ))
-                        } */}
+                        }
+                    </div>
 
-                    </table>
                 </div>
 
                 <div className="tripActions">
@@ -53,7 +55,8 @@ export function TripCu() {
                         See totals
                     </div>
 
-                    <div className="tripAction actiongreen">
+                    <AddFriend ref={friendRef}/>
+                    <div className="tripAction actiongreen" onClick={() => {friendRef.current?.open()}}>
                         <div className="tripButton"><TbUsersPlus /></div>
                         Invite friends
                     </div>

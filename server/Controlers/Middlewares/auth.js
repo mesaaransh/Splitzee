@@ -7,7 +7,7 @@ async function auth(req, res, next){
 
         let token = req.headers.token;
         if(token){
-            isValid = jwt.verify(token, config.jwtkey)
+            isValid = jwt.verify(token, process.env.JWT_KEY)
             if(isValid){
                 req.tokenData = isValid;
                 next();

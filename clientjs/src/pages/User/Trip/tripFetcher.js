@@ -18,9 +18,11 @@ async function tripFetcher(id){
     );
     
     return {
+        raw: trip.data,
+        grouped: {
         ...trip.data,
         transactions: sortedGrouped
-    };
+    }};
 }
 
 export default tripFetcher;

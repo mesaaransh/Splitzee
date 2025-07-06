@@ -13,25 +13,22 @@
 
 }
 
-.tripInfoTable{
-
-    border: 0px solid black;
-    border-collapse: collapse;
-
+.tripInfoTotal{
+    margin-top: 10px;
+    width: 100%;
 }
 
-.tripInfoTable > thead > td{
-    padding: 10px 20px;
-}
-.tripInfoTable > tr > td{
-    padding: 0px 20px;
+.tripInfoTotal .friend{
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+
+    padding: 4px 0px;
+    border-bottom: 1px solid var(--sec3);
 }
 
-.data{
-    font-style: italic;
-    text-align: center;
-    font-size: 0.9rem;
-    border-left: 2px solid var(--sec3);
+.tripInfoTotal .friend:nth-of-type(1){
+    border-top: 1px solid var(--sec3);
 }
 
 .inflow{
@@ -54,12 +51,13 @@
 
 .tripAction{
 
-    flex: 0 0 calc(50% - 10px);
+    flex-basis: 45%;
+    flex-grow: 1;
     display: flex;
     align-items: center;
 
-    padding: 15px 20px;
-    border-radius: 20px;
+    padding: 1vw;
+    border-radius: 13px;
 
     cursor: pointer;
     transition-duration: 200ms;

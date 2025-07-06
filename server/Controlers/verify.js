@@ -9,7 +9,7 @@ async function verify(req, res) {
         token = data.token
         
         let isValid = false
-        isValid = jwt.verify(token, config.jwtkey)
+        isValid = jwt.verify(token, process.env.JWT_KEY)
         if (isValid) {
             let currUser = await user.findById(isValid.id).select("-password -__v -createdAt -updatedAt");
             res.status(200);

@@ -18,7 +18,7 @@ async function verifyUser(req, res) {
                     id: currUser._id,
                     email: currUser.email,
                 },
-                    config.jwtkey,
+                    process.env.JWT_KEY,
                     {
                         expiresIn: '2 days'
                     }
@@ -42,6 +42,7 @@ async function verifyUser(req, res) {
     }
     catch (error) {
         res.status(400)
+        console.log(error)
         res.send(error)
     }
 

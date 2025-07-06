@@ -6,27 +6,10 @@ import { TripCu } from "./TripCU";
 import tripFetcher from "./tripFetcher";
 import dateFormat from "dateformat";
 import getCategoryForDescription from "./functions/iconSuggestor";
-import expenseDeleter from "./actions/expenseDeleter";
+import expenseDeleter from "./actions/Expense/expenseDeleter";
 
 
 export default function Trips() {
-
-    return (
-        <>
-            <div className="trip">
-
-                <TripCu />
-                <div className="tripTransactions">
-                    <TripTransactions />
-                </div>
-
-            </div>
-        </>
-    )
-}
-
-
-function TripTransactions() {
 
     const { id } = useParams()
     let trip = useQuery({
@@ -35,22 +18,41 @@ function TripTransactions() {
         refetchOnWindowFocus: false,
     })
 
-    if(trip.isError) return (<>There was an error fetching trips</>)
+    return (
+        <>
+        {
+            (trip.isLoading || trip.isPending)?
+            <p>Loading Data</p>
+            :
+            <div className="trip">
+
+                <TripCu trip={trip.data.raw} />
+                <div className="tripTransactions">
+                    <TripTransactions trip={trip.data.grouped} />
+                </div>
+
+            </div>
+        }
+        </>
+    )
+}
+
+
+function TripTransactions({ trip }) {
+
+    // if (trip.isError) return (<>There was an error fetching trips</>)
     return (
         <>
             {
-                trip.isFetching || trip.isLoading ?
-                    <>Fetching details...</>
-                    :
-                    Object.keys(trip.data.transactions).map((date) => (
-                        <TripTransactionSection date={date} num={trip.data.transactions[date].length} key={date}>
-                            {
-                                trip.data.transactions[date].map((data) => (
-                                    <TripTransaction key={data._id} data={data} />
-                                ))
-                            }
-                        </TripTransactionSection>
-                    ))
+                Object.keys(trip.transactions).map((date) => (
+                    <TripTransactionSection date={date} num={trip.transactions[date].length} key={date}>
+                        {
+                            trip.transactions[date].map((data) => (
+                                <TripTransaction key={data._id} data={data} />
+                            ))
+                        }
+                    </TripTransactionSection>
+                ))
             }
         </>
     )
@@ -79,7 +81,7 @@ function TripTransactionSection({ date, num, children }) {
 
 function TripTransaction({ data }) {
 
-    let {id} = useParams();
+    let { id } = useParams();
     const { icon: Icon, color, bgColor } = getCategoryForDescription(data.description);
     let userData = JSON.parse(sessionStorage.getItem("userData"));
     let query = useQueryClient();
@@ -100,11 +102,11 @@ function TripTransaction({ data }) {
         }
     })
 
-    function deleteHandle(){
+    function deleteHandle() {
         deleter.mutate(data._id);
     }
 
-    if(deleter.isPending) return (<div className="tripTransaction">Deleting...</div>);
+    if (deleter.isPending) return (<div className="tripTransaction">Deleting...</div>);
     return (
 
         <div className="tripTransaction">
@@ -117,10 +119,10 @@ function TripTransaction({ data }) {
                 <p className="tripTransactionDate">Paid By: {data.financer.name}</p>
                 <p className="tripTransactionDate">Shared By: {data.members.map((member) => (member.name + ", "))}</p>
             </div>
-            
+
             <div className="tripTransactionAmount">
                 <h3>${data.amount}</h3>
-                <p>Your Share: ${isPresent?Math.round((data.amount/data.members.length)*100)/100:'0'}</p>
+                <p>Your Share: ${isPresent ? Math.round((data.amount / data.members.length) * 100) / 100 : '0'}</p>
             </div>
 
             <div className="tripTransactionIcons">

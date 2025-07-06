@@ -1,5 +1,5 @@
 import { useImperativeHandle, forwardRef, useState } from "react";
-import tripFetcher from "../tripFetcher";
+import tripFetcher from "../../tripFetcher";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import addExpense from "./expenseAdder";
@@ -108,7 +108,7 @@ const AddExpense = forwardRef((props, ref) => {
             <form onSubmit={submitHandle}>
                 <div>
                     <h2>Add Expense</h2>
-                    <p>{trip.data.name} - {dateFormat(trip.data.startDate, 'dd mmmm yyyy')}</p>
+                    <p>{trip.data.raw.name} - {dateFormat(trip.data.raw.startDate, 'dd mmmm yyyy')}</p>
                 </div>
                 <div className="closeForm">
                     <FaXmark onClick={closeForm} />
@@ -130,7 +130,7 @@ const AddExpense = forwardRef((props, ref) => {
                     <label htmlFor="date">Paid By</label>
                     <div className="financers">
                         {
-                            trip.data.members.map((member) => (
+                            trip.data.raw.members.map((member) => (
                                 <div className={`financer ${financer === member._id ? 'selected' : ''}`} key={member._id} data-id={member._id} onClick={selectFinancer}>
                                     <p>{member.name}</p>
                                 </div>
@@ -143,7 +143,7 @@ const AddExpense = forwardRef((props, ref) => {
                     <label htmlFor="date">Split Into</label>
                     <div className="financers">
                         {
-                            trip.data.members.map((member) => (
+                            trip.data.raw.members.map((member) => (
                                 <div className={`financer ${members.includes(member._id) ? 'selected' : ''}`} key={member._id} data-id={member._id} onClick={selectMembers}>
                                     <p>{member.name}</p>
                                 </div>
