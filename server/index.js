@@ -1,5 +1,4 @@
 const express = require('express')
-const bodyParser = require("body-parser")
 const cors = require('cors')
 const { newUser, verifyUser, getFriends, addRequest, addFriend } = require('./Controlers/user')
 const { connector } = require('./connector')

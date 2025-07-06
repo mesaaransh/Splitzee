@@ -20,18 +20,11 @@
 }
 
 .userFriendImage{
-    height: 60px;
+    height: 40px;
     aspect-ratio: 1;
     background-color: teal;
     border-radius: 100px;
     margin-right: 20px;
-}
-
-.userFriendImage img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
 }
 
 .userFriend > h3:nth-of-type(2){

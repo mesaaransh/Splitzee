@@ -1,0 +1,69 @@
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Cabin', sans-serif;
+  letter-spacing: 0.4pt;
+  box-sizing: border-box;
+}
+
+:root{
+  --primary: #9600ec;
+  --sec1: #F9FAFC;
+  --sec2: hsl(231, 33%, 94%);
+  --sec3: hsl(231, 33%, 80%);
+  --dark1: #8D95A8;
+  --dark2: hsl(240, 15%, 10%);
+
+  --blue1: #0086E6;
+  --blue2: #625FFF;
+  --blue3: #7300e6;
+  --bluea: #c9e9ff;
+
+  --red1: #ff0040;
+  --red2: #ff007b;
+  --red3: #ff13b0;
+  --reda: #ffc4d2;
+
+  --yellow1: #ffd500;
+  --yellow2: #faaf00;
+  --yellow3: #e5ff00;
+  --yellowa: #fff1ac;
+
+  --green1: #00b818;
+  --green2: #00de73;
+  --green3: #3de400;
+  --greena: #c4ffcc;
+
+  --sep: hsl(0, 0%, 85%);
+}
+
+body{
+  color: var(--dark2);
+}
+
+button{
+  cursor: pointer;
+  transition-duration: 200ms;
+}
+
+a{
+  color: var(--blue1);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+
+  transition-duration: 200ms;
+}
+
+a:hover{
+  color: var(--blue3);
+}
+
+.shake:hover{
+  animation: shake 700ms;
+  animation-timing-function: ease-in-out;
+}
+
+.pop:hover{
+  animation: bookmark 500ms;
+  animation-timing-function: ease-in;
+}
