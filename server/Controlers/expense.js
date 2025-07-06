@@ -14,8 +14,7 @@ async function addExpense(req, res){
         await newExpense.save();
 
         res.status(200);
-        let sendData = await (await currTrip.populate('transactions')).populate('members', 'name phone email')
-        res.send(sendData)
+        res.send(currTrip)
 
     } catch (error) {
         console.log(error);

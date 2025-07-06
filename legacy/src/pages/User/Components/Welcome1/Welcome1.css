@@ -1,0 +1,37 @@
+.welcome1{
+
+    background-color: rgb(0, 134, 230);
+    color: var(--sec1);
+    padding: 50px 40px;
+    border-radius: 20px;
+
+}
+
+.welcome1 > h1{
+    margin-bottom: 5px;
+}
+
+.welcome1 > .buttons{
+    display: flex;
+    gap: 10px;
+
+    margin-top: 30px;
+}
+
+.welcome1 > .buttons > button{
+
+    font-family: 'Cabin';
+    padding: 8px 20px;
+    background-color: transparent;
+
+    border: 2px solid var(--sec1);
+    color: var(--sec1);
+
+    font-weight: 600;
+
+}
+
+.welcome1 > .buttons > button:hover{
+    background-color: var(--sec1);
+    color: rgb(0, 134, 230);
+}

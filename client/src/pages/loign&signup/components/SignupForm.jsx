@@ -3,19 +3,16 @@ import { useState } from "react"
 import config from "../../../config";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import waiter from "../../../waiter";
 
 export default function SignupForm() {
 
-    let [formData, setFromData] = useState({
-        password: ""
-    });
-
+    let [formData, setFromData] = useState({});
     let [error, setError] = useState("")
-    let [disable, setDisable] = useState(true)
+    let [disable, setDisable] = useState(true);
+
     const navigator = useNavigate();
 
-    function formInputHandler(event: any) {
+    function formInputHandler(event) {
         setError("")
         let name = event.target.name;
         let value = event.target.value;
@@ -27,7 +24,7 @@ export default function SignupForm() {
 
     const signup = useMutation({
         mutationKey: ['signup'],
-        mutationFn: (formData: any) =>
+        mutationFn: (formData) =>
             axios.post(config.apiURL + 'user', formData, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -35,7 +32,6 @@ export default function SignupForm() {
             }).then((data) => (data.data)),
         onSuccess: async () => {
             window.alert('Login Successful')
-            await waiter(1000);
             navigator('/login');
         },
         onError: (err)=>{
@@ -44,12 +40,12 @@ export default function SignupForm() {
         }
     })
 
-    async function submitHandler(e: any) {
+    async function submitHandler(e) {
         e.preventDefault();
         signup.mutate(formData)
     }
 
-    function validatePassword(e: any) {
+    function validatePassword(e) {
         if (e.target.value == formData.password) {
             setError("")
             setDisable(false)

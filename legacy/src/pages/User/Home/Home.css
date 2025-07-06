@@ -1,0 +1,10 @@
+.home{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.home > div.row{
+    display: flex;
+    gap: 20px;
+}

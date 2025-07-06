@@ -3,7 +3,13 @@ const activity = require("../Models/activity");
 
 async function getActivities(req, res) {
     try {
-        let activities = await activity.find({user: {$in: [req.tokenData.id]}}).sort({date: -1});
+        let activities = await activity.find({
+            user: {$in: [req.tokenData.id]},
+        })
+        .limit(5)
+        .sort({
+            date: -1
+        });
         res.status(200).send(activities);
     }
     catch (error) {

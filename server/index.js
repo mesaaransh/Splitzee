@@ -1,5 +1,4 @@
 const express = require('express')
-const bodyParser = require("body-parser")
 const cors = require('cors')
 const { newUser, verifyUser, getFriends, addRequest, addFriend } = require('./Controlers/user')
 const { connector } = require('./connector')
@@ -10,8 +9,11 @@ const { addExpense, delExpense } = require('./Controlers/expense')
 const { addActivity, getActivities } = require('./Controlers/activity')
 
 const app = express()
-app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+require('dotenv').config()
+
 connector();
 
 
@@ -40,4 +42,4 @@ app.get("/activity", auth, getActivities)
 app.post("/activity", auth, addActivity)
 
 
-app.listen(8000, ()=>{console.log("----------AppStarted-----------");})
+app.listen( process.env.PORT || 8000, ()=>{console.log("----------AppStarted-----------");})

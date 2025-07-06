@@ -1,0 +1,289 @@
+.tripcu{
+
+    width: 100%;
+    background-color: var(--sec1);
+    border-radius: 15px;
+    padding: 20px;
+
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 20px;
+    border: 1px solid var(--sep);
+
+}
+
+.tripInfoTable{
+
+    border: 0px solid black;
+    border-collapse: collapse;
+
+}
+
+.tripInfoTable > thead > td{
+    padding: 10px 20px;
+}
+.tripInfoTable > tr > td{
+    padding: 0px 20px;
+}
+
+.data{
+    font-style: italic;
+    text-align: center;
+    font-size: 0.9rem;
+    border-left: 2px solid var(--sec3);
+}
+
+.inflow{
+    color: var(--red1);
+}
+
+.outflow{
+    color: var(--green1);
+}
+
+.tripActions{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    
+    width: 50%;
+    height: 100%;
+    gap: 10px;
+}
+
+.tripAction{
+
+    flex: 0 0 calc(50% - 10px);
+    display: flex;
+    align-items: center;
+
+    padding: 15px 20px;
+    border-radius: 20px;
+
+    cursor: pointer;
+    transition-duration: 200ms;
+
+}
+
+.tripAction:hover{
+    transform: translateY(-3px);
+}
+
+.actionblue{
+    background-color: var(--bluea);
+    color: var(--blue1);
+}
+.actionyellow{
+
+    background-color: var(--yellowa);
+    color: var(--yellow2);
+
+}
+.actionred{
+
+    background-color: var(--reda);
+    color: var(--red1);
+
+}
+.actiongreen{
+    background-color: var(--greena);
+    color: var(--green1);
+}
+
+.tripButton{
+
+    height: auto;
+    aspect-ratio: 1;
+    padding: 10px;
+    border: 2px dashed;
+    border-radius: 13px;
+    font-size: 1.3em;
+
+    margin-right: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    transition-duration: 200ms;
+
+}
+
+.tripButton:hover{
+
+    filter: brightness(90%);
+
+}
+
+.tripTransactions{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.tripTransactionSection{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.tripTransactionSectionHeader{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    
+    padding: 0 10px;
+}
+
+.tripTransactionSectionHeader > div{
+    display: flex;
+    align-items: flex-end;
+    margin-left: auto;
+    gap: 40px;
+    color: var(--dark1);
+}
+
+
+.tripTransaction{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: var(--sec1);
+    padding: 20px 30px;
+    border-radius: 15px;
+    margin-top: 20px;
+
+    border: 1px solid var(--sep);
+}
+
+.tripTransactionIcon{
+    height: 40px;
+    aspect-ratio: 1;
+    background-color: teal;
+    border-radius: 10px;
+
+    margin-right: 20px;
+}
+
+.tripTransactionDate{
+    color: var(--dark1);
+}
+
+.tripTransactionAmount{
+    margin-left: auto;
+    margin-right: 40px;
+}
+
+.tripTransactionIcons{
+
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tripTransactionIcons > div{
+    cursor: pointer;
+
+    height: 40px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.3em;
+    border-radius: 10px;
+
+    
+}
+
+.tripTransactionIcons > div.delete{
+    color: var(--red1);
+    background-color: var(--reda);
+}
+
+.tripTransactionIcons > div.delete:hover{
+    animation: shake 700ms;
+}
+
+
+.tripTransactionIcons > div.bookmark{
+    color: var(--blue1);
+    background-color: var(--bluea);
+}
+
+.tripTransactionIcons > div.bookmark:hover{
+
+    animation: bookmark 500ms;
+    animation-timing-function: ease-in;
+
+}
+
+
+
+
+@keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+      transform: translate3d(1px, 0, 0);
+    }
+    
+    30%, 50%, 70% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    40%, 60% {
+      transform: translate3d(1px, 0, 0);
+  }
+}
+
+@keyframes bookmark {
+
+    50%{
+        transform: translateY(-6px);
+    }
+    
+    70%{
+        transform: translateY(0px);
+    }
+    
+    85%{
+        transform: translateY(-3px);
+    }
+
+    100%{
+        transform: translateY(0px);
+    }
+    
+}
+
+
+.totalCell{
+
+    padding: 10px 20px;
+    text-align: center;
+
+}
+
+.totals{
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: var(--sec1);
+    padding: 30px 60px;
+
+    border-radius: 20px;
+    box-shadow: 0px 0px 30px rgb(0, 0, 0, 0.1);
+
+}
+
+.totalsTable{
+    margin-top: 40px;
+}
