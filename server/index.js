@@ -43,4 +43,4 @@ app.get("/activity", auth, getActivities)
 app.post("/activity", auth, addActivity)
 
 
-app.listen(8000, ()=>{console.log("----------AppStarted-----------");})
+app.listen( process.env.PORT || 8000, ()=>{console.log("----------AppStarted-----------");})
