@@ -7,6 +7,7 @@ import config from "../../../config"
 export default function LoginForm() {
 
     let [formData, setFormData] = useState({})
+    let [err, setErr] = useState("")
     const navigator = useNavigate()
 
     function formInputHandler(e) {
@@ -30,7 +31,8 @@ export default function LoginForm() {
             navigator('/user/home', { replace: true })
         },
         onError: (err)=>{
-            console.log(err);
+            console.log(err.response.data);
+            setErr(err.response.data)
         }
     })
 
@@ -65,7 +67,7 @@ export default function LoginForm() {
                 <label htmlFor="">Frogot Password?</label>
             </div>
 
-            <p className="error">{login.error?.message}</p>
+            <p className="error">{err}</p>
             <button type="submit" disabled={login.isPending}>{login.isPending?'Loggin In':'Login'}</button>
 
         </form>

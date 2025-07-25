@@ -35,7 +35,7 @@ export default function SignupForm() {
             navigator('/login');
         },
         onError: (err)=>{
-            setError(err.message)
+            setError(err.response.data)
             console.log(err);
         }
     })
