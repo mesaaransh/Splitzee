@@ -1,15 +1,19 @@
 import "./PendingDuesFriends.css"
 
 export default function PendingDuesFriends() {
+
+    let userData = JSON.parse(sessionStorage.getItem('userData'))
+
     return (
         <div className="pendingDuesFriends">
-            <h3>Pending Dues</h3>
+            <h3>My Friends</h3>
 
             <div className="friends">
-                <Friend name={"Chirag Bansal"} amount={'XXXX'} />
-                <Friend name={"Nandan Garg"} amount={'XXXX'} />
-                <Friend name={"Abhay Bagla"} amount={'XXXX'} />
-                <Friend name={"Vivek Arora"} amount={'XXXX'} />
+                {
+                    userData.friends.map((friend) => (
+                        <Friend friend={friend} />
+                    ))
+                }
             </div>
 
         </div>
@@ -17,14 +21,16 @@ export default function PendingDuesFriends() {
 }
 
 
-function Friend({name, amount}) {
+function Friend({friend}) {
 
     return (
         <div className="friend">
-            <div className="friendimg"></div>
+            <div className="friendimg">
+                <img src={friend.profilePhoto} alt="" />
+            </div>
             <div>
-                <h5>{name}</h5>
-                <p>${amount}</p>
+                <h4>{friend.name}</h4>
+                <p>{friend.email}</p>
             </div>
         </div>
     )

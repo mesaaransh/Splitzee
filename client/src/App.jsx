@@ -7,6 +7,7 @@ import Trip from "./pages/User/Trip/Trip"
 import Home from "./pages/User/Home/Home"
 import Layout from "./pages/User/Layout"
 import "./App.css"
+import Profile from './pages/User/Profile/Profile'
 
 function App() {
   const queryClient = new QueryClient()
@@ -20,6 +21,7 @@ function App() {
           <Route path='/user' element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="home" element={<Home />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="friends" element={<Friends />} />
             <Route path="trip/:id" element={<Trip />} />
           </Route>
