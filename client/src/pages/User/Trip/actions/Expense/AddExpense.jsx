@@ -1,14 +1,14 @@
 import { useImperativeHandle, forwardRef, useState } from "react";
-import tripFetcher from "../../tripFetcher";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import addExpense from "./expenseAdder";
 import dateFormat from 'dateformat';
 
 import { FaXmark } from "react-icons/fa6";
+import { BarLoader } from "react-spinners";
 
 const AddExpense = forwardRef((props, ref) => {
-    
+
     const [open, setOpen] = useState(false);
     let query = useQueryClient();
 
@@ -18,52 +18,48 @@ const AddExpense = forwardRef((props, ref) => {
     }));
 
     const { id } = useParams()
-    let trip = useQuery({
-        queryKey: ['trip', id],
-        queryFn: () => tripFetcher(id),
-        refetchOnWindowFocus: false,
-    })
-    
+    const trip = query.getQueryData(['trip', id])
+
     const [date, setDate] = useState();
     let [financer, setFinancer] = useState(null);
     let [members, setMembers] = useState([]);
-    
+
     function selectFinancer(e) {
         setFinancer(e.currentTarget.dataset.id);
     }
-    
+
     const selectMembers = (e) => {
         const id = e.currentTarget.dataset.id;
         if (!id) return;
-        
+
         setMembers((prev) =>
             prev.includes(id)
                 ? prev.filter((i) => i !== id)
                 : [...prev, id]
-            );
-        };
+        );
+    };
 
-        let expenseAdder = useMutation({
-            mutationFn: (d) => addExpense(d),
-            onSuccess: (data) => {
+    let expenseAdder = useMutation({
+        mutationFn: (d) => addExpense(d),
+        onSuccess: (data) => {
             alert('Expense added successfully!');
-            console.log(data);
             query.invalidateQueries({ queryKey: ['trip', data._id] });
+            closeForm();
         },
         onError: (error) => {
             console.error('Error adding expense:', error);
             alert('Failed to add expense. Please try again.');
         }
     })
-    
+
     function submitHandle(e) {
         e.preventDefault();
-        
+
         if (!financer) {
             alert('Please select a financer');
             return;
         }
-        
+
         if (members.length === 0) {
             alert('Please select at least one member');
             return;
@@ -72,6 +68,7 @@ const AddExpense = forwardRef((props, ref) => {
         const formData = new FormData(e.currentTarget);
         const data = {
             trip: id,
+            tripName: trip.raw.name,
             description: formData.get('description'),
             amount: parseFloat(formData.get('amount')),
             date: formData.get('date'),
@@ -79,8 +76,7 @@ const AddExpense = forwardRef((props, ref) => {
             members
         }
 
-        expenseAdder.mutate(data)
-        closeForm();
+        expenseAdder.mutate(data);
 
     }
 
@@ -89,17 +85,11 @@ const AddExpense = forwardRef((props, ref) => {
         setMembers([]);
         setOpen(false);
     }
-    
+
     if (!open) return <></>;
-    if (trip.isFetching || trip.isLoading) return (
+    if (!trip) return (
         <div className="formContainer">
             <form>Loading...</form>
-        </div>
-    );
-
-    if (trip.isError) return (
-        <div className="formContainer">
-            <form action="">Error fetching trip details</form>
         </div>
     );
 
@@ -108,7 +98,7 @@ const AddExpense = forwardRef((props, ref) => {
             <form onSubmit={submitHandle}>
                 <div>
                     <h2>Add Expense</h2>
-                    <p>{trip.data.raw.name} - {dateFormat(trip.data.raw.startDate, 'dd mmmm yyyy')}</p>
+                    <p>{trip.raw.name} - {dateFormat(trip.raw.startDate, 'dd mmmm yyyy')}</p>
                 </div>
                 <div className="closeForm">
                     <FaXmark onClick={closeForm} />
@@ -130,7 +120,7 @@ const AddExpense = forwardRef((props, ref) => {
                     <label htmlFor="date">Paid By</label>
                     <div className="financers">
                         {
-                            trip.data.raw.members.map((member) => (
+                            trip.raw.members.map((member) => (
                                 <div className={`financer ${financer === member._id ? 'selected' : ''}`} key={member._id} data-id={member._id} onClick={selectFinancer}>
                                     <p>{member.name}</p>
                                 </div>
@@ -143,7 +133,7 @@ const AddExpense = forwardRef((props, ref) => {
                     <label htmlFor="date">Split Into</label>
                     <div className="financers">
                         {
-                            trip.data.raw.members.map((member) => (
+                            trip.raw.members.map((member) => (
                                 <div className={`financer ${members.includes(member._id) ? 'selected' : ''}`} key={member._id} data-id={member._id} onClick={selectMembers}>
                                     <p>{member.name}</p>
                                 </div>
@@ -153,6 +143,11 @@ const AddExpense = forwardRef((props, ref) => {
                 </div>
                 <button type="submit">Add Expense</button>
             </form>
+            {
+                expenseAdder.isPending
+                    ? <div className="loader"><BarLoader /></div>
+                    : <></>
+            }
         </div>
     )
 })

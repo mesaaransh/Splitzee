@@ -2,7 +2,6 @@ var validator = require('validator');
 const user = require('../Models/user');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-const { config } = require('../config');
 const saltRounds = 10;
 
 async function verifyUser(req, res) {

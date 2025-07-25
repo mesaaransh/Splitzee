@@ -1,13 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { forwardRef, useImperativeHandle, useState } from "react"
 import { useParams } from "react-router-dom"
-import inviter from "./friendInviter";
 import { FaXmark } from "react-icons/fa6";
+import inviter from "./friendInviter";
 
 let AddFriend = forwardRef((props, ref) => {
 
    let userData = JSON.parse(sessionStorage.getItem('userData'))
    const [open, setOpen] = useState(false);
+
+   let { id } = useParams();
+   const query = useQueryClient()
+   const trip = query.getQueryData(['trip', id])
+
    useImperativeHandle(ref, () => ({
       open: () => setOpen(true),
       close: () => setOpen(false)
@@ -23,7 +28,7 @@ let AddFriend = forwardRef((props, ref) => {
          <form>
             <div>
                <h2>Invite Friends</h2>
-               <p>asdfasdf</p>
+               <p>{trip.raw.name}</p>
             </div>
             <div className="closeForm">
                <FaXmark onClick={closeForm} />
@@ -44,9 +49,7 @@ function Friend({ friend }) {
 
    let { id } = useParams();
    const query = useQueryClient()
-   const trip = query.getQueryData(['trip', id])
-
-   console.log(trip)
+   const trip = query.getQueryData(['trip', id]).raw
 
    let friendInvite = useMutation({
       mutationFn: (d) => inviter(d),

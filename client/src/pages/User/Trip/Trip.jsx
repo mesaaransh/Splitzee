@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { TbTrashX, TbBookmark } from "react-icons/tb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TripCu } from "./TripCU";
+import { BarLoader } from "react-spinners"
 import tripFetcher from "./tripFetcher";
 import dateFormat from "dateformat";
 import getCategoryForDescription from "./functions/iconSuggestor";
@@ -14,25 +15,29 @@ export default function Trips() {
     const { id } = useParams()
     let trip = useQuery({
         queryKey: ['trip', id],
-        queryFn: () => tripFetcher(id),
+        queryFn: () => (tripFetcher(id)),
         refetchOnWindowFocus: false,
+        refetchOnMount: false,
     })
 
     return (
         <>
-        {
-            (trip.isLoading || trip.isPending)?
-            <p>Loading Data</p>
-            :
-            <div className="trip">
-
-                <TripCu trip={trip.data.raw} />
-                <div className="tripTransactions">
-                    <TripTransactions trip={trip.data.grouped} />
-                </div>
-
-            </div>
-        }
+            {
+                (trip.isLoading || trip.isPending) ?
+                    <p>Loading Data</p>
+                    :
+                    <div className="trip">
+                        <TripCu trip={trip.data.raw} />
+                        <div className="tripTransactions">
+                            <TripTransactions trip={trip.data.grouped} />
+                            {
+                                trip.isFetching
+                                    ? <div className="loader"><BarLoader /></div>
+                                    : ''
+                            }
+                        </div>
+                    </div>
+            }
         </>
     )
 }
@@ -40,7 +45,7 @@ export default function Trips() {
 
 function TripTransactions({ trip }) {
 
-    // if (trip.isError) return (<>There was an error fetching trips</>)
+    if (trip.isError) return (<>There was an error fetching trips</>)
     return (
         <>
             {
@@ -106,7 +111,7 @@ function TripTransaction({ data }) {
         deleter.mutate(data._id);
     }
 
-    if (deleter.isPending) return (<div className="tripTransaction">Deleting...</div>);
+    if (deleter.isPending) return (<div className="loader"> <BarLoader/> </div>);
     return (
 
         <div className="tripTransaction">
@@ -117,7 +122,7 @@ function TripTransaction({ data }) {
             <div className="tripTransactionInfo">
                 <h3>{data.description}</h3>
                 <p className="tripTransactionDate">Paid By: {data.financer.name}</p>
-                <p className="tripTransactionDate">Shared By: {data.members.map((member) => (member.name + ", "))}</p>
+                <p className="tripTransactionDate">Shared By: {data.members.map(member => member.name).join(", ")}</p>
             </div>
 
             <div className="tripTransactionAmount">

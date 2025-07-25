@@ -13,7 +13,6 @@ export default function Topbar() {
         <div className="topbarMenu">
             <div className="topbarMenuButton" onClick={() => {navigator('./home')}}>Home</div>
             <div className="topbarMenuButton" onClick={() => {navigator('./friends')}} >Friends</div>
-            <div className="topbarMenuButton" onClick={() => {navigator('./activity')}}>Activity</div>
             <div className="topbarMenuButton" onClick={() => {navigator('./profile')}}>Profile</div>
         </div>
     </div>

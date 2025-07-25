@@ -13,6 +13,7 @@
   --sec3: hsl(231, 33%, 80%);
   --dark1: #8D95A8;
   --dark2: hsl(240, 15%, 10%);
+  --dark3: hsl(240, 10%, 28%);
 
   --blue1: #0086E6;
   --blue2: #625FFF;
@@ -50,7 +51,6 @@ a{
   color: var(--blue1);
   text-decoration: underline;
   text-decoration-thickness: 2px;
-
   transition-duration: 200ms;
 }
 
@@ -197,4 +197,18 @@ a:hover{
 
 .formGroup .friendInvite button {
   width: fit-content;
+}
+
+.loader{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

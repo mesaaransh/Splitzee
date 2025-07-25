@@ -1,15 +1,21 @@
 import { TbArrowBigUpLine, TbPlus, TbCash, TbUsersPlus } from "react-icons/tb";
-import AddExpense from "./actions/Expense/AddExpense";
 import { useEffect, useRef, useState } from "react";
+import { CSVLink } from "react-csv";
+
+import AddExpense from "./actions/Expense/AddExpense";
 import AddFriend from "./actions/Friends/AddFriend";
 import userTotals from "./functions/userTotals";
+import exportData from "./actions/Export/exportData";
+import Totals from "./actions/Totals/Totals";
 
 export function TripCu({trip}) {
 
     let expenseRef = useRef();
     let friendRef = useRef();
+    let totalRef = useRef();
 
     let [totals, setTotals] = useState(userTotals(trip))
+    let data = exportData(trip.transactions)
 
     useEffect(() => {
         setTotals(userTotals(trip));
@@ -20,7 +26,7 @@ export function TripCu({trip}) {
             <div className="tripcu">
 
                 <div className="tripInfo">
-                    <h3>Trip Totals</h3>
+                    <h3>Trip Dues</h3>
 
                     <div className="tripInfoTotal">
                         {
@@ -39,20 +45,21 @@ export function TripCu({trip}) {
 
                 <div className="tripActions">
 
-                    <div className="tripAction actionyellow">
+                    <CSVLink filename={trip.name} data={data} target="_blank" className="tripAction actionyellow">
                         <div className="tripButton"><TbArrowBigUpLine /></div>
                         Export trip
-                    </div>
+                    </CSVLink>
 
                     <AddExpense ref={expenseRef}/>
                     <div className="tripAction actionblue" onClick={() => {expenseRef.current?.open()}}>
                         <div className="tripButton"><TbPlus /></div>
                         Add expense
                     </div>
-
-                    <div className="tripAction actionred">
+                    
+                    <Totals ref={totalRef}/>
+                    <div className="tripAction actionred" onClick={() => {totalRef.current?.open()}}>
                         <div className="tripButton"><TbCash /></div>
-                        See totals
+                        Trip totals
                     </div>
 
                     <AddFriend ref={friendRef}/>

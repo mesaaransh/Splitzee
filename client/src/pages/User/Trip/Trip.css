@@ -47,18 +47,21 @@
     width: 50%;
     height: 100%;
     gap: 10px;
+
+    
 }
 
 .tripAction{
-
+    
     flex-basis: 45%;
     flex-grow: 1;
     display: flex;
     align-items: center;
-
+    
     padding: 1vw;
     border-radius: 13px;
-
+    text-decoration: none;
+    
     cursor: pointer;
     transition-duration: 200ms;
 
@@ -72,18 +75,17 @@
     background-color: var(--bluea);
     color: var(--blue1);
 }
-.actionyellow{
 
+.actionyellow{
     background-color: var(--yellowa);
     color: var(--yellow2);
-
 }
-.actionred{
 
+.actionred{
     background-color: var(--reda);
     color: var(--red1);
-
 }
+
 .actiongreen{
     background-color: var(--greena);
     color: var(--green1);
@@ -110,12 +112,11 @@
 }
 
 .tripButton:hover{
-
     filter: brightness(90%);
-
 }
 
 .tripTransactions{
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -237,8 +238,6 @@
 }
 
 
-
-
 @keyframes shake {
     10%, 90% {
       transform: translate3d(-1px, 0, 0);
@@ -300,4 +299,35 @@
 
 .totalsTable{
     margin-top: 40px;
+}
+
+.totalTable{
+    width: 100%;
+}
+
+.totalTableHead{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* margin-bottom: 10px; */
+    padding: 5px 0px;
+
+    border-top: 1px solid var(--dark1);
+    border-bottom: 1px solid var(--dark1);
+}
+
+.totalTableTxs{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px 0px;
+}
+
+.totalTableTx{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+
+    color: var(--dark3);
 }
