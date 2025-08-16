@@ -1,0 +1,43 @@
+.landing{
+    background: linear-gradient(180deg, #d182ff 0%, rgba(255, 255, 255, 1) 100%);
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.landing h1{
+    font-size: 4rem;
+}
+
+.landing p{
+    width: 60ch;
+}
+.landing .btngroup{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.landing .btngroup button{
+    padding: 15px 40px;
+    border: 0px solid;
+
+    color: var(--sec1);
+    font-weight: 300;
+    font-size: 1rem;
+    font-family: 'Cabin', sans-serif;
+    background-color: var(--primary);
+
+    border-radius: 10px;
+}
+
+.landing .btngroup button:hover{
+    scale: 1.03;
+}
